@@ -3,6 +3,8 @@ package de.ur.mi.travelnote;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 import org.w3c.dom.Text;
 
