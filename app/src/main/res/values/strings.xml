@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Travelnote</string>
+    <string name="test">GitTest</string>
 </resources>
