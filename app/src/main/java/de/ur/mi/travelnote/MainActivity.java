@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -16,7 +17,6 @@ import com.facebook.login.widget.LoginButton;
 public class MainActivity extends AppCompatActivity {
 
     LoginButton loginButton;
-    TextView textView;
     CallbackManager callbackManager;
 
     @Override
@@ -41,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     /* Method to set up a facebook login button
-        Currently the method does not very much.
+        Currently the method does not do very much.
+
+        No method what happens (and where) when loggin out
         */
 
     private void setupLoginButton() {
@@ -51,19 +53,20 @@ public class MainActivity extends AppCompatActivity {
             //Success method: Defines what happens if facebook login was successful and permission is granted
             @Override
             public void onSuccess(LoginResult loginResult) {
-                textView.setText("Login erfolgreich \n" + loginResult.getAccessToken().getUserId() + "\n"+loginResult.getAccessToken().getToken());
-
+                Intent intent = new Intent(MainActivity.this, MenuOverview.class);
+                startActivity(intent);
             }
 
             //Cancel method: defines what happens if facebook login is canceled or permission is not granted
             @Override
             public void onCancel() {
-                textView.setText("Login abgebrochen");
+                Toast.makeText(MainActivity.this,R.string.fb_login_cancel_toast, Toast.LENGTH_LONG).show();
+
             }
 
             @Override
             public void onError(FacebookException error) {
-
+                Toast.makeText(MainActivity.this,R.string.fb_login_error_toast, Toast.LENGTH_LONG).show();
             }
         });
     }
