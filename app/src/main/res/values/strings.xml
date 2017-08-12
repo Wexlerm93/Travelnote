@@ -3,6 +3,6 @@
     <string name="facebook_app_id">866666736838560</string>
     <string name="fb_login_protocol_scheme">fb866666736838560</string>
     <string name="fb_login_cancel_toast">Loginvorgang abgebrochen</string>
-    <string name="fb_login_error_toast">Loginvorgang abgebrochen</string>
+    <string name="fb_login_error_toast">Fehler bei Login.</string>
     <string name="start_btn_name">Ohne Login starten.</string>
 </resources>

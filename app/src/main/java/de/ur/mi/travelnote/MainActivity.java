@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -13,6 +12,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         setupLoginButton();
         setupStartButton();
     }
+
+
 
     private void setupStartButton() {
         Button startButton = (Button) findViewById(R.id.start_button);

@@ -60,14 +60,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
-
-
         mGoogleMap = googleMap;
         // We will use Regensburg for now
         goToLocationZoom(49.012778, 12.100726, 10);
-
-
     }
 
     private void goToLocationZoom(double lat, double lng, float zoom) {
