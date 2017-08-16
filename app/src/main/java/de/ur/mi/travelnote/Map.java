@@ -36,7 +36,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
         if (googleServicesAvailable()) {
             Toast.makeText(this, "Perfect", Toast.LENGTH_LONG).show();
-            setContentView(R.layout.map_layout);
+            setContentView(R.layout.map_activity);
             initMap();
             setupLayout();
         }

@@ -64,6 +64,21 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".Diary_Menu_Activity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".Diary_Entry_Activity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <uses-library android:name="com.google.android.maps"/>
 
 
