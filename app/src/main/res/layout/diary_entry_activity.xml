@@ -36,6 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:focusable="false"
             android:hint="Datum eintragen"
             android:inputType="date"
             android:background="@drawable/edit_text_style"/>

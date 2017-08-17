@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 
 /**
  * Created by wexle on 16.08.2017.
@@ -16,6 +17,12 @@ public class Diary_Menu_Activity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_menu);
         setupUI();
+        setuplist();
+    }
+
+    private void setuplist() {
+        ListView diarylist = (ListView) findViewById(R.id.diary_list);
+        diarylist.setEmptyView(findViewById(R.id.empty_text));
     }
 
     private void setupUI() {
@@ -27,6 +34,7 @@ public class Diary_Menu_Activity extends Activity {
                 startActivity(intent);
             }
         });
+
     }
 
 
