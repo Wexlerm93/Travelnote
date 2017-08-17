@@ -1,10 +1,15 @@
 package de.ur.mi.travelnote;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -15,7 +20,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 
 /**
@@ -32,9 +36,20 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
         if (googleServicesAvailable()) {
             Toast.makeText(this, "Perfect", Toast.LENGTH_LONG).show();
-            setContentView(R.layout.map_layout);
+            setContentView(R.layout.map_activity);
             initMap();
+            setupLayout();
         }
+    }
+
+    private void setupLayout() {
+        Button markCurrentLocation = (Button) findViewById(R.id.markCurrentLoc);
+        markCurrentLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void initMap() {
@@ -60,8 +75,24 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
-        // We will use Regensburg for now
-        goToLocationZoom(49.012778, 12.100726, 10);
+        String service = Context.LOCATION_SERVICE;
+        LocationManager locationManager = (LocationManager) getSystemService(service);
+
+        String provider = LocationManager.NETWORK_PROVIDER;
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(provider);
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
+        goToLocationZoom(lat, lng, 10);
     }
 
     private void goToLocationZoom(double lat, double lng, float zoom) {
@@ -70,4 +101,5 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
         mGoogleMap.moveCamera(update);
 
     }
+
 }

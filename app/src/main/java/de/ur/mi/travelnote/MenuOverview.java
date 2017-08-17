@@ -27,6 +27,13 @@ public class MenuOverview extends Activity {
                 startActivity(intent);
             }
         });
-
+        Button diary = (Button) findViewById(R.id.diary_button);
+        diary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MenuOverview.this, Diary_Menu_Activity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
