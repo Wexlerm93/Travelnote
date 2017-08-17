@@ -35,7 +35,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
             setContentView(R.layout.map_layout);
             initMap();
         }
-
     }
 
     private void initMap() {
