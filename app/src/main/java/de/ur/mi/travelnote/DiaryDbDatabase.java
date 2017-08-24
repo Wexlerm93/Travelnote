@@ -5,12 +5,19 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.icu.util.Calendar;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by wexle on 16.08.2017.
  */
 
-public class DiaryDbAdapter {
+public class DiaryDbDatabase {
 
     private DiaryDbHelper helper;
     private SQLiteDatabase db;
@@ -23,7 +30,7 @@ public class DiaryDbAdapter {
     public static final String KEY_BODY = "body";
     public static final String KEY_DATE = "date";
 
-    public DiaryDbAdapter(Context context) {
+    public DiaryDbDatabase(Context context) {
         helper = new DiaryDbHelper(context, DB_NAME, null, DB_VERSION);
     }
 
@@ -44,10 +51,31 @@ public class DiaryDbAdapter {
         return newInsertId;
     }
 
-    public Cursor getAllmyObjects() {
+    public ArrayList<DiaryEntry> getAllmyObjects() {
+        ArrayList<DiaryEntry> items = new ArrayList<DiaryEntry>();
         String[] allColumns = new String[] {KEY_ID, KEY_BODY, KEY_DATE};
         Cursor results = db.query(DIARY_TABLE, allColumns, null, null, null, null, null);
-        return results;
+        if (results.moveToFirst()) {
+            do {
+                String content = results.getString(1);
+                String date = results.getString(2);
+
+                Date formattedDate = null;
+                try {
+                    formattedDate = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).parse(date);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    Calendar cal = Calendar.getInstance(Locale.GERMAN);
+                    cal.setTime(formattedDate);
+                    items.add(new DiaryEntry(content, cal.get(Calendar.DAY_OF_MONTH) ,cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)));
+                }
+            }while (results.moveToNext());
+        }
+        return items;
     }
 
     public void removeObject(long id) {
