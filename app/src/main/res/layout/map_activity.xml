@@ -14,7 +14,18 @@
         android:id="@+id/markCurrentLoc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Markiere meine momentane Position"
+        android:text="Markiere Regensburg"
         android:layout_marginBottom="15dp"/>
+    <Button
+        android:id="@+id/markThisLoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Markiere diesen Ort:"/>
+
+    <EditText
+        android:id="@+id/manualLoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Geben sie einen Ort ein"/>
 
 </LinearLayout>

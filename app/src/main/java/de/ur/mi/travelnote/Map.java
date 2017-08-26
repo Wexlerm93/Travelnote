@@ -3,6 +3,8 @@ package de.ur.mi.travelnote;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -20,6 +23,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -29,11 +37,11 @@ import com.google.android.gms.maps.model.LatLng;
 public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
     GoogleMap mGoogleMap;
+    Marker mMarker;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (googleServicesAvailable()) {
             Toast.makeText(this, "Perfect", Toast.LENGTH_LONG).show();
             setContentView(R.layout.map_activity);
@@ -48,9 +56,34 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
         markCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mGoogleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(49.020730, 12.102456))
+                .title("26.8.2017 Regensburg"));
             }
         });
+        EditText manualLocation = (EditText) findViewById(R.id.manualLoc);
+        final String loc = manualLocation.getText().toString();
+        Button markThisLocation = (Button) findViewById(R.id.markThisLoc);
+        markThisLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    markLocation(loc);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void markLocation(String location) throws IOException {
+        Geocoder gc = new Geocoder(this);
+        List<Address> list = gc.getFromLocationName(location, 1);
+        Address address = list.get(0);
+        goToLocationZoom(address.getLatitude(), address.getLongitude(), 10);
+        mGoogleMap.addMarker(new MarkerOptions()
+        .position(new LatLng(address.getLatitude(), address.getLongitude()))
+        .title(address.getLocality()));
     }
 
     private void initMap() {

@@ -22,6 +22,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Neuer Eintrag"/>
+        android:text="Neuer Eintrag" />
+
+    <Button
+        android:id="@+id/delete_db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Lösche das Tagebuch"
+        />
 
 </LinearLayout>
