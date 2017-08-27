@@ -35,5 +35,14 @@ public class MenuOverview extends Activity {
                 startActivity(intent);
             }
         });
+
+        Button gallery = (Button) findViewById(R.id.gallery_button);
+        gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MenuOverview.this, Gallery_Menu.class);
+                startActivity(intent);
+            }
+        });
     }
 }

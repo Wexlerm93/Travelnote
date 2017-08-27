@@ -6,6 +6,7 @@ import android.icu.text.DateFormat;
 import android.icu.util.Calendar;
 import android.icu.util.GregorianCalendar;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -19,7 +20,7 @@ import java.util.Locale;
  * Created by wexle on 16.08.2017.
  */
 
-public class Diary_Menu_Activity extends Activity {
+public class Diary_Menu_Activity extends AppCompatActivity {
 
     private ArrayList<DiaryEntry> entries;
     private DiaryAdapter diary_adapter;
