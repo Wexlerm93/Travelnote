@@ -6,11 +6,14 @@ import android.icu.text.DateFormat;
 import android.icu.util.Calendar;
 import android.icu.util.GregorianCalendar;
 import android.os.Bundle;
+
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +35,8 @@ public class Diary_Menu_Activity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         setContentView(R.layout.diary_menu);
+        Toolbar diaryToolbar = (Toolbar) findViewById(R.id.diary_toolbar);
+        setSupportActionBar(diaryToolbar);
         initEntryList();
         initDatabase();
         if (extras != null) {
@@ -41,6 +46,29 @@ public class Diary_Menu_Activity extends AppCompatActivity {
         }
         setupUI();
         refreshArrayList();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_buttons_diary_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete_diary:
+                diaryDB.clearDatabase(diaryDB.DIARY_TABLE);
+                refreshArrayList();
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     private void addNewEntry(String content, String date) {
@@ -101,22 +129,16 @@ public class Diary_Menu_Activity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        Button deleteDb = (Button) findViewById(R.id.delete_db);
-        deleteDb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         ListView diarylist = (ListView) findViewById(R.id.diary_list);
         diarylist.setEmptyView(findViewById(R.id.empty_text));
     }
-
 
 
     protected void onDestroy() {
         super.onDestroy();
         diaryDB.close();
     }
+
+
 
 }

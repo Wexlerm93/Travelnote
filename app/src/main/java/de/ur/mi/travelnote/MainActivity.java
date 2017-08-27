@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MenuOverview.class);
                 startActivity(intent);
+                finish(); // finishes activity, so if user clicks back button in next activity he does not get back to login activity
             }
         });
     }
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     /* Method to set up a facebook login button
         Currently the method does not do very much.
 
-        No method what happens (and where) when loggin out
+        No method what happens (and where) when logging out
         */
 
     private void setupLoginButton() {
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 Intent intent = new Intent(MainActivity.this, MenuOverview.class);
                 startActivity(intent);
+                finish(); // finishes activity, so if user clicks back button in next activity he cannot get back
             }
 
             //Cancel method: defines what happens if facebook login is canceled or permission is not granted

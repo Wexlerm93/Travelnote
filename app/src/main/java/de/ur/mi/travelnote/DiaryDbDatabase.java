@@ -89,6 +89,7 @@ public class DiaryDbDatabase {
         db.execSQL("drop table " + DB_NAME);
     }
 
+
     private class DiaryDbHelper extends SQLiteOpenHelper {
 
         private static final String CREATE_DB = "create table " + DIARY_TABLE
@@ -109,5 +110,11 @@ public class DiaryDbDatabase {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         }
+    }
+
+
+    public void clearDatabase(String TABLE_NAME) {
+        String clearDBQuery = "DELETE FROM "+TABLE_NAME;
+        db.execSQL(clearDBQuery);
     }
 }

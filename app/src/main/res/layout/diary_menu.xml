@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/diary_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <ListView
         android:id="@+id/diary_list"
@@ -15,21 +26,16 @@
         android:id="@+id/empty_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Noch kein Eintrag verfügbar"/>
+        android:textAlignment="center"
+        android:text="@string/no_db_entry_available"/>
 
     <Button
         android:id="@+id/newEntry_Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Neuer Eintrag" />
+        android:text="@string/new_db_entry" />
 
-    <Button
-        android:id="@+id/delete_db"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Lösche das Tagebuch"
-        />
+
 
 </LinearLayout>
