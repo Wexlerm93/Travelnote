@@ -1,12 +1,10 @@
 package de.ur.mi.travelnote;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.icu.util.Calendar;
 import android.icu.util.GregorianCalendar;
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,14 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by wexle on 16.08.2017.
- */
 
 public class Diary_Menu_Activity extends AppCompatActivity {
 
@@ -58,8 +55,7 @@ public class Diary_Menu_Activity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete_diary:
-                diaryDB.clearDatabase(diaryDB.DIARY_TABLE);
-                refreshArrayList();
+                deleteDiaryEntries();
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
                 return true;
@@ -69,6 +65,17 @@ public class Diary_Menu_Activity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    /*
+        Method defines what happens if user clicks back button in diary activity.
+        This method provides, that a user does not get back to a previous filled diary entry form.
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(Diary_Menu_Activity.this, MenuOverview.class));
+        finish();
     }
 
     private void addNewEntry(String content, String date) {
@@ -140,5 +147,14 @@ public class Diary_Menu_Activity extends AppCompatActivity {
     }
 
 
+    /*
+        Method to clear all database entries.
+     */
+    private void deleteDiaryEntries() {
+        // Probably good idea to implement an alert dialog
+        diaryDB.clearDatabase(diaryDB.DIARY_TABLE);
+        refreshArrayList();
+        Toast.makeText(Diary_Menu_Activity.this,R.string.diary_deleted_toast, Toast.LENGTH_LONG).show();
+    }
 
 }

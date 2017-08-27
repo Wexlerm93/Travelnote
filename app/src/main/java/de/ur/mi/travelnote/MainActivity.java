@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MenuOverview.class);
                 startActivity(intent);
-                finish(); // finishes activity, so if user clicks back button in next activity he does not get back to login activity
-            }
+                finish(); // finishes activity, so that user doesn't get back to login activity, when he clicks the back button of his device
+            }//            }
         });
     }
 
