@@ -3,6 +3,7 @@ package de.ur.mi.travelnote;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.icu.util.Calendar;
@@ -78,10 +79,14 @@ public class DiaryDbDatabase {
         return items;
     }
 
-    public void removeObject(long id) {
+    public void removeObject(DiaryEntry entry) {
         String toDelete = KEY_ID + "=?";
-        String[] deleteArgs = new String[] {String.valueOf(id)};
+        String[] deleteArgs = new String[] {entry.getBody()};
         db.delete(DIARY_TABLE, toDelete, deleteArgs);
+    }
+
+    public void reset() throws SQLException {
+        db.execSQL("drop table " + DB_NAME);
     }
 
     private class DiaryDbHelper extends SQLiteOpenHelper {

@@ -26,6 +26,7 @@ public class Diary_Menu_Activity extends AppCompatActivity {
     private DiaryAdapter diary_adapter;
     private DiaryDbDatabase diaryDB;
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
@@ -100,9 +101,18 @@ public class Diary_Menu_Activity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        Button deleteDb = (Button) findViewById(R.id.delete_db);
+        deleteDb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         ListView diarylist = (ListView) findViewById(R.id.diary_list);
         diarylist.setEmptyView(findViewById(R.id.empty_text));
     }
+
+
 
     protected void onDestroy() {
         super.onDestroy();
