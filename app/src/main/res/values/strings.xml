@@ -14,5 +14,8 @@
     <string name="new_db_entry">Neuer Eintrag</string>
     <string name="no_db_entry_available">Noch kein Eintrag verfügbar</string>
     <string name="diary_deleted_toast">Alle Tagebucheinträge wurden gelöscht.</string>
+    <string name="send_DB_per_mail">Per Mail senden</string>
+    <string name="DB_is_empty">Dieses Tagebuch ist leer.</string>
+    <string name="Mail_Head">Reisetagebuch</string>
 
 </resources>

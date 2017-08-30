@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.icu.util.Calendar;
 import android.icu.util.GregorianCalendar;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -53,9 +54,19 @@ public class Diary_Menu_Activity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.email) {
+            sendDbViaMail();
+        }
+        if (item.getItemId() == R.id.action_share) {
+
+        }
         switch (item.getItemId()) {
             case R.id.action_delete_diary:
-                deleteDiaryEntries();
+                if (entries.isEmpty()) {
+                    Toast.makeText(Diary_Menu_Activity.this, R.string.DB_is_empty, Toast.LENGTH_LONG).show();
+                } else {
+                    deleteDiaryEntries();
+                }
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
                 return true;
@@ -65,6 +76,36 @@ public class Diary_Menu_Activity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    private void sendDbViaMail() {
+        Intent intent = null, chooser = null;
+
+        if (entries.isEmpty()) {
+            Toast.makeText(Diary_Menu_Activity.this,R.string.DB_is_empty, Toast.LENGTH_LONG).show();
+        } else {
+            intent = new Intent(Intent.ACTION_SEND);
+            intent.setData(Uri.parse("mailto:"));
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Reisetagebuch");
+            StringBuilder sb = new StringBuilder();
+            for (DiaryEntry item : entries){
+                String s = "Datum: " + item.getFormattedDate().toString() + "\n" + item.getBody() + "\n\n\n";
+                sb.append(s);
+            }
+            intent.putExtra(Intent.EXTRA_TEXT, diaryToText());
+            intent.setType("message/rfc822");
+            chooser = Intent.createChooser(intent, "Send Email");
+            startActivity(chooser);
+        }
+    }
+
+    private String diaryToText() {
+        StringBuilder sb = new StringBuilder();
+        for (DiaryEntry item : entries){
+            String s = "Datum: " + item.getFormattedDate().toString() + "\n" + item.getBody() + "\n";
+            sb.append(s);
+        }
+        return sb.toString();
     }
 
     /*
