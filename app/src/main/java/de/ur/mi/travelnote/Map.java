@@ -12,11 +12,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,6 +41,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
     GoogleMap mGoogleMap;
     Marker mMarker;
+    Place selectedPlace;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
 
     private void setupLayout() {
         Button markCurrentLocation = (Button) findViewById(R.id.markCurrentLoc);
+        Button markThisLocation = (Button) findViewById(R.id.markThisLoc);
         markCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,19 +65,21 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
                 .title("26.8.2017 Regensburg"));
             }
         });
-        EditText manualLocation = (EditText) findViewById(R.id.manualLoc);
-        final String loc = manualLocation.getText().toString();
-        Button markThisLocation = (Button) findViewById(R.id.markThisLoc);
-        markThisLocation.setOnClickListener(new View.OnClickListener() {
+        final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setHint("Geben Sie hier einen Ort ein...");
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
-            public void onClick(View v) {
-                try {
-                    markLocation(loc);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            public void onPlaceSelected(Place place) {
+                selectedPlace = place;
+            }
+
+            @Override
+            public void onError(Status status) {
+
             }
         });
+
+
     }
 
     private void markLocation(String location) throws IOException {
@@ -132,7 +139,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
         LatLng latlng = new LatLng(lat, lng);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latlng, zoom);
         mGoogleMap.moveCamera(update);
-
     }
 
 }

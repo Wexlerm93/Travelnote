@@ -74,6 +74,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".Map">
+            <meta-data
+                android:name="com.google.android.maps.v2.API_KEY"
+                android:value="AIzaSyCFt9oWrRCVR-pa0lvuMJFc5ZKjsKBIuPk" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
