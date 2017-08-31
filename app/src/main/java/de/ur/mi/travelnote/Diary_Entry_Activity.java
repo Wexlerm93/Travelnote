@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by wexle on 16.08.2017.
@@ -24,9 +24,9 @@ public class Diary_Entry_Activity extends Activity {
     }
 
     private void setupUI() {
-        TextView currentItem = (TextView) findViewById(R.id.currentItem);
         final EditText editContent = (EditText) findViewById(R.id.content_edit);
         final EditText editDate =  (EditText) findViewById(R.id.date_edit);
+        final EditText editPlace = (EditText) findViewById(R.id.place_edit);
         editDate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View arg0) {
                 showDatePickerDialog();
@@ -35,10 +35,15 @@ public class Diary_Entry_Activity extends Activity {
         Button addButton = (Button) findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(Diary_Entry_Activity.this, Diary_Menu_Activity.class);
-                intent.putExtra("content", editContent.getText().toString());
-                intent.putExtra("date", editDate.getText().toString());
-                startActivity(intent);
+                if (editDate.getText() != null && editDate.getText().toString() != "" && editContent.getText() != null && editPlace.getText() != null ) {
+                    Intent intent = new Intent(Diary_Entry_Activity.this, Diary_Menu_Activity.class);
+                    intent.putExtra("content", editContent.getText().toString());
+                    intent.putExtra("place", editPlace.getText().toString());
+                    intent.putExtra("date", editDate.getText().toString());
+                    startActivity(intent);
+                }   else {
+                    Toast.makeText(Diary_Entry_Activity.this, "Es müssen alle Felder ausgefüllt werden!", Toast.LENGTH_LONG).show();
+                }
             }
         });
 

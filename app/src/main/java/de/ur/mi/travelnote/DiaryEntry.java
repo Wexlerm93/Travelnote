@@ -15,11 +15,14 @@ import java.util.Locale;
 public class DiaryEntry {
     private String body;
     private GregorianCalendar cal;
+    private String place;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public DiaryEntry(String body, int day, int month, int year) {
+    public DiaryEntry(String body, int day, int month, int year, String place) {
         this.body = body;
         cal = new GregorianCalendar(year, month, day);
+        this.place = place;
+
     }
 
     public String getBody() {
@@ -32,6 +35,10 @@ public class DiaryEntry {
             return df.format(cal.getTime());
         }
         return null;
+    }
+
+    public String getPlace() {
+        return place;
     }
 
 }

@@ -60,9 +60,10 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
         markCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mGoogleMap.addMarker(new MarkerOptions()
+                Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(49.020730, 12.102456))
                 .title("26.8.2017 Regensburg"));
+                goToLocationZoom(marker.getPosition().latitude, marker.getPosition().longitude, 5);
             }
         });
         final PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);

@@ -39,8 +39,9 @@ public class Diary_Menu_Activity extends AppCompatActivity {
         initDatabase();
         if (extras != null) {
             String content = extras.getString("content");
+            String place = extras.getString("place");
             String date = extras.getString("date");
-            addNewEntry(content, date);
+            addNewEntry(content, date, place);
         }
         setupUI();
         refreshArrayList();
@@ -89,23 +90,14 @@ public class Diary_Menu_Activity extends AppCompatActivity {
             intent.putExtra(Intent.EXTRA_SUBJECT, "Reisetagebuch");
             StringBuilder sb = new StringBuilder();
             for (DiaryEntry item : entries){
-                String s = "Datum: " + item.getFormattedDate().toString() + "\n" + item.getBody() + "\n\n\n";
+                String s = "Datum: " + item.getFormattedDate().toString() + "\nOrt: " + item.getPlace() + "\n" + item.getBody() + "\n "+ "\n";
                 sb.append(s);
             }
-            intent.putExtra(Intent.EXTRA_TEXT, diaryToText());
+            intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
             intent.setType("message/rfc822");
             chooser = Intent.createChooser(intent, "Send Email");
             startActivity(chooser);
         }
-    }
-
-    private String diaryToText() {
-        StringBuilder sb = new StringBuilder();
-        for (DiaryEntry item : entries){
-            String s = "Datum: " + item.getFormattedDate().toString() + "\n" + item.getBody() + "\n";
-            sb.append(s);
-        }
-        return sb.toString();
     }
 
     /*
@@ -119,14 +111,14 @@ public class Diary_Menu_Activity extends AppCompatActivity {
         finish();
     }
 
-    private void addNewEntry(String content, String date) {
+    private void addNewEntry(String content, String date, String place) {
         Date entryDate = getDateFromString(date);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             GregorianCalendar cal = new GregorianCalendar();
             cal.setTime(entryDate);
 
             DiaryEntry newEntry = new DiaryEntry(content, cal.get(Calendar.DAY_OF_MONTH),
-                    cal.get(Calendar.MONTH), cal.get(Calendar.YEAR));
+                    cal.get(Calendar.MONTH), cal.get(Calendar.YEAR), place);
             diaryDB.insertMyObject(newEntry);
             refreshArrayList();
         }

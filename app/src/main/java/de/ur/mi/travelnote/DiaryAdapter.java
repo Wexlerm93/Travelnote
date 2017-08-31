@@ -37,9 +37,11 @@ public class DiaryAdapter extends ArrayAdapter <DiaryEntry> {
         DiaryEntry item = diaryList.get(position);
 
         if (item != null) {
+            TextView diaryPlace = (TextView)  v.findViewById(R.id.diary_place);
             TextView diaryContent = (TextView) v.findViewById(R.id.diary_content);
             TextView diaryDate = (TextView) v.findViewById(R.id.diary_date);
 
+            diaryPlace.setText(item.getPlace());
             diaryContent.setText(item.getBody());
             diaryDate.setText(item.getFormattedDate());
         }

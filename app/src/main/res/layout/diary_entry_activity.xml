@@ -29,17 +29,32 @@
         android:layout_weight="0.2"
         android:layout_height="wrap_content">
 
-
-        <EditText
-            android:id="@+id/date_edit"
+        <LinearLayout
             android:layout_weight="0.6"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:focusable="false"
-            android:hint="Datum eintragen"
-            android:inputType="date"
-            android:background="@drawable/edit_text_style"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/place_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ort eintragen"
+                android:background="@drawable/edit_text_style"
+                android:gravity="center"
+                />
+
+            <EditText
+                android:id="@+id/date_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:focusable="false"
+                android:hint="Datum eintragen"
+                android:inputType="date"
+                android:background="@drawable/edit_text_style"/>
+        </LinearLayout>
 
         <Button
             android:id="@+id/add_button"
