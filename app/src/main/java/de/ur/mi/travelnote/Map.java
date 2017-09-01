@@ -1,9 +1,9 @@
 package de.ur.mi.travelnote;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -47,7 +47,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (googleServicesAvailable()) {
-            Toast.makeText(this, "Perfect", Toast.LENGTH_LONG).show();
             setContentView(R.layout.map_activity);
             initMap();
             setupLayout();
@@ -61,8 +60,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 Marker marker = mGoogleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(49.020730, 12.102456))
-                .title("26.8.2017 Regensburg"));
+                        .position(new LatLng(49.020730, 12.102456))
+                        .title("26.8.2017 Regensburg"));
                 goToLocationZoom(marker.getPosition().latitude, marker.getPosition().longitude, 5);
             }
         });
@@ -89,8 +88,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
         Address address = list.get(0);
         goToLocationZoom(address.getLatitude(), address.getLongitude(), 10);
         mGoogleMap.addMarker(new MarkerOptions()
-        .position(new LatLng(address.getLatitude(), address.getLongitude()))
-        .title(address.getLocality()));
+                .position(new LatLng(address.getLatitude(), address.getLongitude()))
+                .title(address.getLocality()));
     }
 
     private void initMap() {
@@ -116,10 +115,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
-        String service = Context.LOCATION_SERVICE;
-        LocationManager locationManager = (LocationManager) getSystemService(service);
-
-        String provider = LocationManager.NETWORK_PROVIDER;
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -130,10 +125,24 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        Location location = locationManager.getLastKnownLocation(provider);
-        double lat = location.getLatitude();
-        double lng = location.getLongitude();
-        goToLocationZoom(lat, lng, 10);
+        double lat;
+        double lon;
+        LocationManager locationManager = (LocationManager)
+                getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String bestProvider = locationManager.getBestProvider(criteria, false);
+        Location location = locationManager.getLastKnownLocation(bestProvider);
+        try {
+            lat = location.getLatitude();
+            lon = location.getLongitude();
+        } catch (NullPointerException e) {
+            lat = -1.0;
+            lon = -1.0;
+        }
+        mGoogleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(lat, lon))
+                .title(location.toString()));
+        goToLocationZoom(lat, lon, 6);
     }
 
     private void goToLocationZoom(double lat, double lng, float zoom) {
