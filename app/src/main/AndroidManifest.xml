@@ -74,9 +74,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Map">
-            <meta-data
-                android:name="com.google.android.maps.v2.API_KEY"
-                android:value="AIzaSyCFt9oWrRCVR-pa0lvuMJFc5ZKjsKBIuPk" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -101,9 +98,12 @@
         <uses-library android:name="com.google.android.maps" />
 
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCFt9oWrRCVR-pa0lvuMJFc5ZKjsKBIuPk" />
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBQGYM4TES-XrSfwmPLZYMfFgQDC4PU1Zg" />
 
+        <activity
+            android:name=".StartActivity"
+            android:label="@string/title_activity_start"></activity>
     </application>
 
 </manifest>

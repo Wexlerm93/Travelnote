@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             //Success method: Defines what happens if facebook login was successful and permission is granted
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Intent intent = new Intent(MainActivity.this, MenuOverview.class);
+                Intent intent = new Intent(MainActivity.this, StartActivity.class);
                 startActivity(intent);
                 finish(); // finishes activity, so if user clicks back button in next activity he cannot get back
             }

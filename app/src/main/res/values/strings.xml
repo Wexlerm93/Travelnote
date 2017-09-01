@@ -17,5 +17,8 @@
     <string name="send_DB_per_mail">Per Mail senden</string>
     <string name="DB_is_empty">Dieses Tagebuch ist leer.</string>
     <string name="Mail_Head">Reisetagebuch</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 </resources>
