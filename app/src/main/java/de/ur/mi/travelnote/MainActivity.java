@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MenuOverview.class);
+                Intent intent = new Intent(MainActivity.this, StartActivity.class);
                 startActivity(intent);
                 finish(); // finishes activity, so that user doesn't get back to login activity, when he clicks the back button of his device
             }//            }

@@ -23,8 +23,6 @@
         android:enabled="true"
         android:title="@string/delete_diary"
         android:visible="true" />
-    <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings" />
+
 
 </menu>

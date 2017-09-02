@@ -1,5 +1,6 @@
 package de.ur.mi.travelnote;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -18,13 +19,16 @@ public class StartActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                    Intent intent1 = new Intent(StartActivity.this, MenuOverview.class);
+                    startActivity(intent1);
                     return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                case R.id.navigation_diary:
+                    Intent intent2 = new Intent(StartActivity.this, Diary_Menu_Activity.class);
+                    startActivity(intent2);
                     return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                case R.id.navigation_map:
+                    Intent intent3 = new Intent(StartActivity.this, Map.class);
+                    startActivity(intent3);
                     return true;
             }
             return false;

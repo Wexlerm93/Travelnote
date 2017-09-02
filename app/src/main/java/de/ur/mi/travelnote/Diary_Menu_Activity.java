@@ -1,11 +1,13 @@
 package de.ur.mi.travelnote;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.icu.text.DateFormat;
 import android.icu.util.Calendar;
 import android.icu.util.GregorianCalendar;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -62,15 +64,17 @@ public class Diary_Menu_Activity extends AppCompatActivity {
 
         }
         switch (item.getItemId()) {
+            // Method to handle if user wants to delete all db entries
             case R.id.action_delete_diary:
+                //check if there are any db entries
                 if (entries.isEmpty()) {
+                    //if there are no db entries, just show toast
                     Toast.makeText(Diary_Menu_Activity.this, R.string.DB_is_empty, Toast.LENGTH_LONG).show();
                 } else {
-                    deleteDiaryEntries();
+                    //method to show dialog, if user wants to delete diary entries
+                    deleteDiaryEntriesDialog();
                 }
-            case R.id.action_settings:
-                // User chose the "Settings" item, show the app settings UI...
-                return true;
+
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -79,18 +83,19 @@ public class Diary_Menu_Activity extends AppCompatActivity {
         }
     }
 
+
     private void sendDbViaMail() {
         Intent intent = null, chooser = null;
 
         if (entries.isEmpty()) {
-            Toast.makeText(Diary_Menu_Activity.this,R.string.DB_is_empty, Toast.LENGTH_LONG).show();
+            Toast.makeText(Diary_Menu_Activity.this, R.string.DB_is_empty, Toast.LENGTH_LONG).show();
         } else {
             intent = new Intent(Intent.ACTION_SEND);
             intent.setData(Uri.parse("mailto:"));
             intent.putExtra(Intent.EXTRA_SUBJECT, "Reisetagebuch");
             StringBuilder sb = new StringBuilder();
-            for (DiaryEntry item : entries){
-                String s = "Datum: " + item.getFormattedDate().toString() + "\nOrt: " + item.getPlace() + "\n" + item.getBody() + "\n "+ "\n";
+            for (DiaryEntry item : entries) {
+                String s = "Datum: " + item.getFormattedDate().toString() + "\nOrt: " + item.getPlace() + "\n" + item.getBody() + "\n " + "\n";
                 sb.append(s);
             }
             intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
@@ -180,14 +185,36 @@ public class Diary_Menu_Activity extends AppCompatActivity {
     }
 
 
+    private void deleteDiaryEntriesDialog() {
+        //if there are db entries build alert dialog to avoid deletion by accident
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Diary_Menu_Activity.this);
+        alertDialog.setTitle(R.string.delete_db_entry_warning_title);
+        alertDialog.setMessage(R.string.delete_db_entry_warning_long);
+        alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
+
+        //if user still clicks yes, then delete db entries
+        alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                deleteDiaryEntries();
+            }
+        });
+
+        //if user cancels, do nothing
+        alertDialog.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing here.
+            }
+        });
+        alertDialog.show();
+    }
+
     /*
         Method to clear all database entries.
      */
     private void deleteDiaryEntries() {
-        // Probably good idea to implement an alert dialog
         diaryDB.clearDatabase(diaryDB.DIARY_TABLE);
         refreshArrayList();
-        Toast.makeText(Diary_Menu_Activity.this,R.string.diary_deleted_toast, Toast.LENGTH_LONG).show();
+        Toast.makeText(Diary_Menu_Activity.this, R.string.diary_deleted_toast, Toast.LENGTH_LONG).show();
     }
 
 }

@@ -17,8 +17,11 @@
     <string name="send_DB_per_mail">Per Mail senden</string>
     <string name="DB_is_empty">Dieses Tagebuch ist leer.</string>
     <string name="Mail_Head">Reisetagebuch</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="menu_title_home">Home</string>
+    <string name="menu_title_diary">Tagebuch</string>
+    <string name="menu_title_map">Karte</string>
+    <string name="menu_title_settings">Einstellungen</string>
+    <string name="delete_db_entry_warning_long">Wollen Sie wirklich alle Tagebucheinträge unwiderruflich löschen?</string>
+    <string name="delete_db_entry_warning_title">Tagebucheinträge löschen</string>
 
 </resources>
