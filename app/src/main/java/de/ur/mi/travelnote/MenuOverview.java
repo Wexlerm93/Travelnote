@@ -10,9 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-/**
- * Created by wexle on 09.08.2017.
- */
 
 public class MenuOverview extends AppCompatActivity {
 

@@ -24,4 +24,6 @@
     <string name="delete_db_entry_warning_long">Wollen Sie wirklich alle Tagebucheinträge unwiderruflich löschen?</string>
     <string name="delete_db_entry_warning_title">Tagebucheinträge löschen</string>
 
+
+
 </resources>

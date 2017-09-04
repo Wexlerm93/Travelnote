@@ -112,7 +112,7 @@ public class Diary_Menu_Activity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(Diary_Menu_Activity.this, MenuOverview.class));
+        startActivity(new Intent(Diary_Menu_Activity.this, StartActivity.class));
         finish();
     }
 
