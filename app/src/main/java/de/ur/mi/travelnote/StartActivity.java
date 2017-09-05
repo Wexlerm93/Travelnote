@@ -4,14 +4,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -28,12 +37,16 @@ public class StartActivity extends AppCompatActivity {
                     transaction.replace(R.id.content, new OverviewFragment()).commit();
                     return true;
                 case R.id.navigation_diary:
-                    Intent intent2 = new Intent(StartActivity.this, Diary_Menu_Activity.class);
-                    startActivity(intent2);
+                    transaction.replace(R.id.content, new DiaryFragment()).commit();
+                    return true;
+                case R.id.navigation_gallery:
+                    transaction.replace(R.id.content, new GalleryFragment()).commit();
                     return true;
                 case R.id.navigation_map:
-                    Intent intent3 = new Intent(StartActivity.this, Map.class);
-                    startActivity(intent3);
+                    transaction.replace(R.id.content, new MapFragment()).commit();
+                    return true;
+                case R.id.navigation_settings:
+                    transaction.replace(R.id.content, new SettingsFragment()).commit();
                     return true;
             }
             return false;
@@ -58,7 +71,10 @@ public class StartActivity extends AppCompatActivity {
         transaction.replace(R.id.content, new OverviewFragment()).commit();
     }
 
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
 
 
 }

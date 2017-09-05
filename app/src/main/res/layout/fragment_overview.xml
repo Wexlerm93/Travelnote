@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/ow_diary_button_image"
-            android:text="Neuer Tagebucheintrag"
+            android:text="@string/new_diary_entry_button_text"
             android:textAlignment="center"
             android:textColor="@color/travelnote_blue"
             android:textSize="30sp"/>
@@ -32,11 +32,11 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/ow_diary_button_image"
-            android:text="Neue Galerie"
+            android:background="@drawable/ow_gallery_button_image"
+            android:text="@string/to_gallery_button_text"
             android:textAlignment="center"
-            android:textColor="@color/travelnote_blue"
-            android:textSize="30sp"/>
+            android:textColor="@color/white"
+            android:textSize="30sp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,13 +44,14 @@
         android:layout_weight="1">
 
         <Button
+            android:id="@+id/map_image_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/ow_diary_button_image"
-            android:text="Zur Karte"
+            android:background="@drawable/ow_map_button_image"
+            android:text="@string/to_map_button_text"
             android:textAlignment="center"
-            android:textColor="@color/travelnote_blue"
-            android:textSize="30sp"/>
+            android:textColor="@color/travelnote_red"
+            android:textSize="30sp" />
     </LinearLayout>
 
 

@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         */
 
     private void setupLoginButton() {
-        loginButton = (LoginButton)findViewById(R.id.login_button);
+        loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
         callbackManager = CallbackManager.Factory.create();
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             //Success method: Defines what happens if facebook login was successful and permission is granted

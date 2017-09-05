@@ -35,8 +35,8 @@ public class Diary_Menu_Activity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         setContentView(R.layout.diary_menu);
-        Toolbar diaryToolbar = (Toolbar) findViewById(R.id.diary_toolbar);
-        setSupportActionBar(diaryToolbar);
+        //Toolbar diaryToolbar = (Toolbar) findViewById(R.id.diary_toolbar);
+        //setSupportActionBar(diaryToolbar);
         initEntryList();
         initDatabase();
         if (extras != null) {
@@ -57,12 +57,10 @@ public class Diary_Menu_Activity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.email) {
+        if (item.getItemId() == R.id.action_email) {
             sendDbViaMail();
         }
-        if (item.getItemId() == R.id.action_share) {
 
-        }
         switch (item.getItemId()) {
             // Method to handle if user wants to delete all db entries
             case R.id.action_delete_diary:

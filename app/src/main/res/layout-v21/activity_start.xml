@@ -14,8 +14,9 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/travelnote_red"
         android:elevation="4dp"
-        android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
-        android:title="@string/app_name" />
+        android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
+        android:title="@string/app_name"
+        app:titleTextColor="@color/white" />
 
     <FrameLayout
         android:id="@+id/content"
@@ -33,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/travelnote_blue"
+        android:theme="@android:style/ThemeOverlay.Material.Dark.ActionBar"
         app:menu="@menu/navigation" />
 
 </LinearLayout>

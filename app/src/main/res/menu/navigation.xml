@@ -10,6 +10,10 @@
         android:id="@+id/navigation_diary"
         android:icon="@drawable/ic_book_black_24dp"
         android:title="@string/menu_title_diary" />
+    <item
+        android:id="@+id/navigation_gallery"
+        android:icon="@drawable/ic_image_black_24dp"
+        android:title="@string/menu_title_gallery" />
 
     <item
         android:id="@+id/navigation_map"
