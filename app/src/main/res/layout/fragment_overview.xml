@@ -12,7 +12,8 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/diary_image_button"
@@ -22,7 +23,9 @@
             android:text="@string/new_diary_entry_button_text"
             android:textAlignment="center"
             android:textColor="@color/travelnote_blue"
-            android:textSize="30sp"/>
+            android:textSize="30sp"
+            />
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
