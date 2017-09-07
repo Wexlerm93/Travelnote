@@ -31,6 +31,8 @@
     <string name="new_diary_entry_button_text">Neuer Tagebucheintrag</string>
     <string name="menu_title_gallery">Galerie</string>
     <string name="send_per_mail">Per Mail senden</string>
+    <string name="travelnote_app_logo_alt_text">Travelnote App Logo</string>
+    <string name="welcome_text">Willkommen bei Travelnote!</string>
 
 
 </resources>

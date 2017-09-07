@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void setupStartButton() {
         Button startButton = (Button) findViewById(R.id.start_button);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, StartActivity.class);
                 startActivity(intent);
-                finish(); // finishes activity, so that user doesn't get back to login activity, when he clicks the back button of his device
+                finish(); // finishes activity, so that user doesn't get back to login activity, when he clicks the back button of his device in a future activity
             }//            }
         });
     }
@@ -65,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 Toast.makeText(MainActivity.this,R.string.fb_login_cancel_toast, Toast.LENGTH_LONG).show();
-
             }
 
             @Override
