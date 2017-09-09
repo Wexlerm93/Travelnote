@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -92,6 +90,16 @@ public class OverviewFragment extends Fragment {
             }
         });
 
+        Button toGallery = (Button) view.findViewById(R.id.gallery_image_button);
+        toGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent  intent = new Intent(getContext(), New_Gallery_Activity.class);
+                getActivity().startActivity(intent);
+            }
+
+        });
+
         Button toMap = (Button) view.findViewById(R.id.map_image_button);
         toMap.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +108,8 @@ public class OverviewFragment extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
+
+
 
         return view;
     }
