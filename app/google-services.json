@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "33390483509",
+    "firebase_url": "https://travelnote-176421.firebaseio.com",
+    "project_id": "travelnote-176421",
+    "storage_bucket": "travelnote-176421.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33390483509:android:63847145ff45bee1",
+        "android_client_info": {
+          "package_name": "de.ur.mi.travelnote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "33390483509-60n592msi8cardoe58fhat097vq5vgio.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.ur.mi.travelnote",
+            "certificate_hash": "6486ace0cd7a66a18a451de34f32e06ea20c638b"
+          }
+        },
+        {
+          "client_id": "33390483509-0bllfb46779k7ac90a8ofdi91375rudr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4d8JxOnezNwEjYy01bcb0R8QwC4uC1lY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "33390483509-0bllfb46779k7ac90a8ofdi91375rudr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

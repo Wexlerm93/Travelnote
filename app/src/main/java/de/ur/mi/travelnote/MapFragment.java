@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +30,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,6 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
 import static android.content.Context.LOCATION_SERVICE;
 
 
@@ -50,6 +54,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     GoogleMap mGoogleMap;
     MapView mMapView;
     View mView;
+
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -70,7 +76,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         // Inflate the layout for this fragment
         mView  = inflater.inflate(R.layout.fragment_map, container, false);
         setHasOptionsMenu(false);
-
         return mView;
     }
 
@@ -113,6 +118,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
     }
+
 
 
     /**

@@ -3,80 +3,69 @@ package de.ur.mi.travelnote;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
+import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    LoginButton loginButton;
-    CallbackManager callbackManager;
+    /*
+        This activity is for login purposes.
+        It uses the external library and service Firebase, which is provided by Google.
+
+        This activity handles several login opportunities and also checks if user already is logged-in, so that he gets directly to StartActivity
+     */
+
+    private FirebaseAuth auth;
+    private static final int RC_SIGN_IN = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setupLoginButton();
-        setupStartButton();
+
+        //get a Instance of Firebase Authentication Service
+        auth = FirebaseAuth.getInstance();
+        //check if user is already logged-in --> redirect user to StartActivity, if not: handle log in or registration process
+        if(auth.getCurrentUser() != null){
+            //user already signed in
+            redirectToStart();
+        }else{
+            // user has to authenticate.. handle registration or log-in process and provide result
+            startActivityForResult(AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setAvailableProviders(
+                            Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                    //new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                    new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
+                    .setTheme(R.style.LoginTheme).build(), RC_SIGN_IN);
+        }
     }
 
 
-    private void setupStartButton() {
-        Button startButton = (Button) findViewById(R.id.start_button);
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, StartActivity.class);
-                startActivity(intent);
-                finish(); // finishes activity, so that user doesn't get back to login activity, when he clicks the back button of his device in a future activity
-            }//            }
-        });
-    }
-
-
-
-    /* Method to set up a facebook login button
-        Currently the method does not do very much.
-
-        No method what happens (and where) when logging out
-        */
-
-    private void setupLoginButton() {
-        loginButton = (LoginButton) findViewById(R.id.facebook_login_button);
-        callbackManager = CallbackManager.Factory.create();
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            //Success method: Defines what happens if facebook login was successful and permission is granted
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Intent intent = new Intent(MainActivity.this, StartActivity.class);
-                startActivity(intent);
-                finish(); // finishes activity, so if user clicks back button in next activity he cannot get back
-            }
-
-            //Cancel method: defines what happens if facebook login is canceled or permission is not granted
-            @Override
-            public void onCancel() {
-                Toast.makeText(MainActivity.this,R.string.fb_login_cancel_toast, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Toast.makeText(MainActivity.this,R.string.fb_login_error_toast, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
+    // now handle result from registration or log-in process
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RC_SIGN_IN){
+            if(resultCode == RESULT_OK){
+                //user logged in
+                redirectToStart();
+            }else{
+                // user not authenticated
+                Toast.makeText(this, "Login nicht möglich. \n Versuchen Sie es später erneut!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
+    // building intent to get to StartActivity
+    private void redirectToStart() {
+        Intent intent = new Intent(this, StartActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }
 

@@ -37,6 +37,7 @@ public class Diary_Menu_Activity extends AppCompatActivity {
         setContentView(R.layout.diary_menu);
         //Toolbar diaryToolbar = (Toolbar) findViewById(R.id.diary_toolbar);
         //setSupportActionBar(diaryToolbar);
+
         initEntryList();
         initDatabase();
         if (extras != null) {
