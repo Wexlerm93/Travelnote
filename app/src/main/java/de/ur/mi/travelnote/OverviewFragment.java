@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -80,9 +83,9 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         setHasOptionsMenu(false);
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_overview, container, false);
-        Button button = (Button) view.findViewById(R.id.diary_image_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        final View view = inflater.inflate(R.layout.fragment_overview, container, false);
+        Button toDiaryEntryButton = (Button) view.findViewById(R.id.diary_image_button);
+        toDiaryEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), Diary_Entry_Activity.class);
@@ -90,8 +93,8 @@ public class OverviewFragment extends Fragment {
             }
         });
 
-        Button toGallery = (Button) view.findViewById(R.id.gallery_image_button);
-        toGallery.setOnClickListener(new View.OnClickListener() {
+        Button toGalleryButton = (Button) view.findViewById(R.id.gallery_image_button);
+        toGalleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent  intent = new Intent(getContext(), New_Gallery_Activity.class);
@@ -100,12 +103,23 @@ public class OverviewFragment extends Fragment {
 
         });
 
-        Button toMap = (Button) view.findViewById(R.id.map_image_button);
-        toMap.setOnClickListener(new View.OnClickListener() {
+
+
+        Button toMapButton = (Button) view.findViewById(R.id.map_image_button);
+        toMapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), Map.class);
-                getActivity().startActivity(intent);
+                //Intent intent = new Intent(getContext(), Map.class);
+                //getActivity().startActivity(intent);
+
+
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.content, new MapFragment()).commit();
+
+
+
+
             }
         });
 

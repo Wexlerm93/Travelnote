@@ -2,13 +2,14 @@ package de.ur.mi.travelnote;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,8 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,9 +40,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     MapView mMapView;
     View mView;
     EditText editText;
-    final double latDE = 51.5167;
-    final double lngDE = 9.9167;
+    String userName;
 
+
+    DatabaseHelper mDatabaseHelper;
 
 
     private OnFragmentInteractionListener mListener;
@@ -57,13 +61,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mDatabaseHelper = new DatabaseHelper(getActivity());
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(user != null){
+            userName = user.getUid();
+        }
+
         // Inflate the layout for this fragment
         mView  = inflater.inflate(R.layout.fragment_map, container, false);
         setHasOptionsMenu(false);
         markNewLocation();
 
+        BottomNavigationView bottomNavView = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
+        bottomNavView.getMenu().findItem(R.id.navigation_map).setChecked(true);
+        //bottomNavView.setSelectedItemId(R.id.navigation_map);
+
+
         return mView;
     }
+
 
 
 
@@ -110,9 +127,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        goToLocationZoom(latDE, lngDE, 3);
-        newMapMarkerWithTitle("Test", latDE, lngDE);
+        displayStoredMapMarker();
+
     }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -120,6 +139,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         menu.clear();
     }
 
+    private void displayStoredMapMarker() {
+        Cursor data = mDatabaseHelper.getData(userName);
+        while (data.moveToNext()){
+            newMapMarker(data.getDouble(1),data.getDouble(2));
+        }
+    }
 
     private void markNewLocation() {
         Button getGeoLocal = (Button) mView.findViewById(R.id.map_get_geo_local);
@@ -144,6 +169,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
                 double lat = address.getLatitude();
                 double lng = address.getLongitude();
                 newMapMarker(lat, lng);
+                addCoordinatesToDB(lat,lng, userName);
                 goToLocationZoom(lat, lng,6);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -160,11 +186,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
 
 
+    private void addCoordinatesToDB(double latitude, double longitude, String userID ){
+        if(!userID.equals("")){
+            boolean insertData = mDatabaseHelper.addCoordinates(latitude, longitude, userID );
+            if(insertData){
+                Toast.makeText(getContext(), "Eintrag erfolgreich", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(getContext(), "Eintrag konnte nicht dauerhaft gespeichert werden.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
 
     private void newMapMarker(double latitude, double longitude){
-        MarkerOptions options = new MarkerOptions().position(new LatLng(latitude,longitude));
+        LatLng latlng = new LatLng(latitude,longitude);
+        MarkerOptions options = new MarkerOptions().position(latlng);
         mGoogleMap.addMarker(options);
-        // To do: store in db
     }
 
     private void newMapMarkerWithTitle(String title, double latitude, double longitude){
@@ -196,6 +234,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         void onFragmentInteraction(Uri uri);
     }
 
+    /*
+        Method to check wether Google Services are available or not.. Google Services are needed to access Google APIs
+     */
     private boolean googleServicesAvailable(){
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int isAvailable = apiAvailability.isGooglePlayServicesAvailable(getContext());
@@ -209,4 +250,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         }
         return false;
     }
+
 }
