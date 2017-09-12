@@ -75,6 +75,8 @@ public class DiaryFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =inflater.inflate(R.layout.fragment_diary, container, false);
 
+
+
         return view;
     }
 

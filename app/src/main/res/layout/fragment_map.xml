@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1.2">
+        android:layout_weight="0.8">
         <com.google.android.gms.maps.MapView
             android:layout_height="match_parent"
             android:layout_width="match_parent"
@@ -21,7 +21,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.8">
+        android:layout_weight="2.2"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/map_geo_location"
+            android:layout_width="match_parent"
+            android:layout_marginRight="@dimen/travelnote_margin_default"
+            android:layout_marginLeft="@dimen/travelnote_margin_default"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center"
+            android:hint="Wo warst Du schon?"
+            android:inputType="text"
+            android:layout_marginBottom="@dimen/travelnote_margin_default"/>
+        <Button
+            android:id="@+id/map_get_geo_local"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/travelnote_margin_default"
+            android:layout_marginRight="@dimen/travelnote_margin_default"
+            android:background="@color/travelnote_red"
+            android:textColor="@color/white"
+            android:text="Standort auf Karte markieren"/>
 
     </LinearLayout>
 
