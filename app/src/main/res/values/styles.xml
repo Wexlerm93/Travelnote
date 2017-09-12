@@ -19,5 +19,14 @@
         <item name="colorAccent">@color/travelnote_red</item>
     </style>
 
+    <style name="Theme.BasicTravelnote.Light.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar" >
+        <item name="colorAccent">@color/travelnote_red</item>
+        <item name="android:colorBackground">@color/travelnote_grey_light</item>
+        <item name="colorPrimary">@color/travelnote_blue</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimaryInverse">@color/white</item>
+        <item name="android:colorForeground">@color/white</item>
+    </style>
+
 
 </resources>

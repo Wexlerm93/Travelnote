@@ -187,8 +187,8 @@ public class Diary_Menu_Activity extends AppCompatActivity {
     private void deleteDiaryEntriesDialog() {
         //if there are db entries build alert dialog to avoid deletion by accident
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Diary_Menu_Activity.this);
-        alertDialog.setTitle(R.string.delete_db_entry_warning_title);
-        alertDialog.setMessage(R.string.delete_db_entry_warning_long);
+        alertDialog.setTitle(R.string.delete_db_diary_entries_warning_title);
+        alertDialog.setMessage(R.string.delete_db_diary_entries_warning_long);
         alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
 
         //if user still clicks yes, then delete db entries

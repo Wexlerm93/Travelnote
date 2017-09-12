@@ -4,10 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="3"
     tools:context="de.ur.mi.travelnote.MainActivity"
     >
 
+    <TextView
+        android:id="@+id/no_conn_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/travelnote_red"
+        android:textSize="30sp"
+        android:layout_marginTop="@dimen/travelnote_margin_default" />
+
+    <TextView
+        android:id="@+id/no_conn_text_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/travelnote_margin_default"
+        android:textColor="@color/travelnote_blue"
+        android:textSize="20sp" />
 
     <!--
 

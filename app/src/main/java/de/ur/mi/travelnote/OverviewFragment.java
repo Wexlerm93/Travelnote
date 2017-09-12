@@ -88,7 +88,7 @@ public class OverviewFragment extends Fragment {
         toDiaryEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), Diary_Entry_Activity.class);
+                Intent intent = new Intent(getContext(), NewDiaryEntryActivity.class);
                 getActivity().startActivity(intent);
             }
         });

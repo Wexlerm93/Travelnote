@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="de.ur.mi.travelnote.DiaryFragment">
+    tools:context="de.ur.mi.travelnote.DiaryFragment"
+    >
 
     <ListView
         android:id="@+id/diary_list"
@@ -21,10 +22,14 @@
         android:layout_gravity="center_horizontal"/>
 
     <Button
-        android:id="@+id/newEntry_Button"
-        android:layout_width="wrap_content"
+        android:id="@+id/new_Entry_Button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/travelnote_red"
+        android:textColor="@color/white"
+        android:layout_margin="@dimen/travelnote_margin_default"
         android:layout_gravity="center"
-        android:text="@string/new_db_entry" />
+        android:text="@string/new_db_entry"
+        />
 
 </LinearLayout>

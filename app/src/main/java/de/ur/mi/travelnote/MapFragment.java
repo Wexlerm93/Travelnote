@@ -1,23 +1,39 @@
 package de.ur.mi.travelnote;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
@@ -26,6 +42,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,23 +52,25 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class MapFragment extends Fragment implements OnMapReadyCallback{
+public class MapFragment extends Fragment implements OnMapReadyCallback {
+    private OnFragmentInteractionListener mListener;
+    final double LAT_EU = 53.0000;
+    final double LNG_EU = 9.0000;
+    final int DEFAULT_ZOOM = 3;
+    String userID;
+    String userName;
+    EditText editText;
     GoogleMap mGoogleMap;
     MapView mMapView;
     View mView;
-    EditText editText;
-    String userName;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    DatabaseHelperMap mDatabaseHelper;
 
 
-    DatabaseHelper mDatabaseHelper;
-
-
-    private OnFragmentInteractionListener mListener;
     public MapFragment() {
         // Required empty public constructor
     }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,27 +80,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDatabaseHelper = new DatabaseHelper(getActivity());
+        mDatabaseHelper = new DatabaseHelperMap(getActivity());
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(user != null){
-            userName = user.getUid();
+        if (user != null) {
+            userID = user.getUid();
+            userName = user.getDisplayName();
+
         }
 
         // Inflate the layout for this fragment
-        mView  = inflater.inflate(R.layout.fragment_map, container, false);
-        setHasOptionsMenu(false);
+        mView = inflater.inflate(R.layout.fragment_map, container, false);
+        setHasOptionsMenu(true);
         markNewLocation();
 
         BottomNavigationView bottomNavView = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
         bottomNavView.getMenu().findItem(R.id.navigation_map).setChecked(true);
-        //bottomNavView.setSelectedItemId(R.id.navigation_map);
-
-
         return mView;
     }
-
-
 
 
     @Override
@@ -89,20 +105,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         super.onViewCreated(view, savedInstanceState);
         initMap();
     }
-    
 
 
     // Initialize Google Map, if Google Services are available
     private void initMap() {
-        if(googleServicesAvailable()){
+        if (googleServicesAvailable()) {
             mMapView = (MapView) mView.findViewById(R.id.myMap);
-            if(mMapView != null){
+            if (mMapView != null) {
                 mMapView.onCreate(null);
                 mMapView.onResume();
                 mMapView.getMapAsync(this);
             }
-        }else {
-            Toast.makeText(getContext(), "Karte kann nicht angezeigt werden.", Toast.LENGTH_SHORT).show();
+        } else {
+            displayShortToast(R.string.map_display_failed);
         }
 
     }
@@ -127,23 +142,57 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        goToLocationZoom(LAT_EU, LNG_EU, DEFAULT_ZOOM);
         displayStoredMapMarker();
 
     }
 
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuInflater menuInflater = new MenuInflater(getContext());
+        menuInflater.inflate(R.menu.action_buttons_map_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
     }
 
-    private void displayStoredMapMarker() {
-        Cursor data = mDatabaseHelper.getData(userName);
-        while (data.moveToNext()){
-            newMapMarker(data.getDouble(1),data.getDouble(2));
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_get_gps_location:
+                getCurrentLocation();
+                return true;
+            case R.id.action_delete_coordinates:
+                deleteDBCoordinatesDialog();
+                return true;
+            case R.id.action_show_marker_all_user:
+                displayStoredMapMarkerAllUser();
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    private void displayStoredMapMarker() {
+        Cursor data = mDatabaseHelper.getData(userID);
+        while (data.moveToNext()) {
+            newMapMarker(data.getDouble(1), data.getDouble(2));
+        }
+    }
+
+    private void displayStoredMapMarkerAllUser() {
+        Cursor data = mDatabaseHelper.getDataAllUser(userID);
+        if (data == null || data.getCount() < 1) {
+            Toast.makeText(getContext(), R.string.no_entries_different_users, Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                while (data.moveToNext()) {
+                    newMapMarkerDiffUser(data.getDouble(1), data.getDouble(2), data.getString(4));
+                }
+            } finally {
+                data.close();
+            }
+        }
+
     }
 
     private void markNewLocation() {
@@ -162,58 +211,59 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
         String location = editText.getText().toString();
         Geocoder geocoder = new Geocoder(getActivity());
 
-        if(!location.equals("")){
+        if (!location.equals("")) {
             try {
                 List<Address> list = geocoder.getFromLocationName(location, 1);
                 Address address = list.get(0);
                 double lat = address.getLatitude();
                 double lng = address.getLongitude();
                 newMapMarker(lat, lng);
-                addCoordinatesToDB(lat,lng, userName);
-                goToLocationZoom(lat, lng,6);
+                addCoordinatesToDB(lat, lng, userID, userName);
+                goToLocationZoom(lat, lng, DEFAULT_ZOOM);
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(getContext(), "Entschuldigung. Ein unerwarteter Fehler ist aufgetreten.", Toast.LENGTH_SHORT).show();
+                displayShortToast(R.string.unexpected_failure);
             }
             editText.setText("");
-        }else{
-            Toast.makeText(getContext(), "Bitte geben Sie einen Ort ein!", Toast.LENGTH_SHORT).show();
+        } else {
+            displayShortToast(R.string.location_missing);
         }
-
 
 
     }
 
 
-
-    private void addCoordinatesToDB(double latitude, double longitude, String userID ){
-        if(!userID.equals("")){
-            boolean insertData = mDatabaseHelper.addCoordinates(latitude, longitude, userID );
-            if(insertData){
-                Toast.makeText(getContext(), "Eintrag erfolgreich", Toast.LENGTH_SHORT).show();
+    private void addCoordinatesToDB(double latitude, double longitude, String ID, String name) {
+        if (!userID.equals("")) {
+            boolean insertData = mDatabaseHelper.addCoordinates(latitude, longitude, ID, name);
+            if (!insertData) {
+                displayShortToast(R.string.entry_failed);
             }
-        }else{
-            Toast.makeText(getContext(), "Eintrag konnte nicht dauerhaft gespeichert werden.", Toast.LENGTH_SHORT).show();
+        } else {
+            displayShortToast(R.string.entry_success);
         }
 
     }
 
+    private void displayShortToast(int s) {
+        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+    }
 
-    private void newMapMarker(double latitude, double longitude){
-        LatLng latlng = new LatLng(latitude,longitude);
+
+    private void newMapMarker(double latitude, double longitude) {
+        LatLng latlng = new LatLng(latitude, longitude);
         MarkerOptions options = new MarkerOptions().position(latlng);
         mGoogleMap.addMarker(options);
     }
 
-    private void newMapMarkerWithTitle(String title, double latitude, double longitude){
-        MarkerOptions options = new MarkerOptions().title(title).position(new LatLng(latitude,longitude));
+    private void newMapMarkerDiffUser(double latitude, double longitude, String name) {
+        LatLng latlng = new LatLng(latitude, longitude);
+        MarkerOptions options = new MarkerOptions().title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(latlng);
         mGoogleMap.addMarker(options);
     }
 
 
-
-
-    private void goToLocationZoom(double lat, double lng, float zoom){
+    private void goToLocationZoom(double lat, double lng, float zoom) {
         LatLng latLng = new LatLng(lat, lng);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
         mGoogleMap.moveCamera(cameraUpdate);
@@ -237,18 +287,136 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
     /*
         Method to check wether Google Services are available or not.. Google Services are needed to access Google APIs
      */
-    private boolean googleServicesAvailable(){
+    private boolean googleServicesAvailable() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int isAvailable = apiAvailability.isGooglePlayServicesAvailable(getContext());
-        if(isAvailable == ConnectionResult.SUCCESS){
+        if (isAvailable == ConnectionResult.SUCCESS) {
             return true;
-        }else if(apiAvailability.isUserResolvableError(isAvailable)){
-            Dialog dialog = apiAvailability.getErrorDialog(getActivity(), isAvailable,0);
+        } else if (apiAvailability.isUserResolvableError(isAvailable)) {
+            Dialog dialog = apiAvailability.getErrorDialog(getActivity(), isAvailable, 0);
             dialog.show();
-        }else {
-            Toast.makeText(getContext(), "Verbindung zu Google Play Services nicht möglich.", Toast.LENGTH_SHORT).show();
+        } else {
+            displayShortToast(R.string.conn_play_services_failed);
         }
         return false;
+    }
+
+
+    private void getCurrentLocation() {
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                double lang = location.getLatitude();
+                double lng = location.getLongitude();
+                newMapMarker(lang, lng);
+                addCoordinatesToDB(lang, lng, userID, userName);
+                displayShortToast(R.string.current_location_marked_success);
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+                enableLocationProviderDialog();
+
+
+            }
+        };
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.INTERNET
+                }, 10);
+                return;
+            }
+        }
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 6000, 200, locationListener);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 10:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 6000, 200, locationListener);
+                    } catch (SecurityException e) {
+                        displayShortToast(R.string.failed_location_permission);
+                    }
+                }
+        }
+    }
+
+    private void enableLocationProviderDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setTitle("Standortfreigabe");
+        alertDialog.setMessage("Du musst Deinen Stanort freigeben, damit Travelnote Deinen Standort markieren kann.");
+        alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
+
+        //if user still clicks yes, then delete db entries
+        alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        });
+
+        //if user cancels, do nothing
+        alertDialog.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing here.
+            }
+        });
+        alertDialog.show();
+    }
+
+
+    private void deleteDBCoordinatesDialog() {
+        //if there are db entries build alert dialog to avoid deletion by accident
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setTitle(R.string.delete_db_map_entries_warning_title);
+        alertDialog.setMessage(R.string.delete_db_map_entries_warning_long);
+        alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
+
+        //if user still clicks yes, then delete db entries
+        alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                deleteCoordinateEntries();
+            }
+        });
+
+        //if user cancels, do nothing
+        alertDialog.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing here.
+
+            }
+        });
+        alertDialog.show();
+    }
+
+    /*
+        Method to clear all database entries from current user and call fragment again to update UI
+     */
+    private void deleteCoordinateEntries() {
+        mDatabaseHelper.clearDatabase(userID);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content, new MapFragment()).commit();
+        displayShortToast(R.string.diary_deleted_toast);
     }
 
 }

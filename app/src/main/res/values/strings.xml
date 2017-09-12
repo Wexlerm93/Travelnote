@@ -6,23 +6,25 @@
     <string name="fb_login_error_toast">Fehler bei Login.</string>
     <string name="start_btn_name">Ohne Login starten.</string>
     <string name="action_settings">Einstellungen</string>
-    <string name="title_activity_login">Sign in</string>
     <string name="action_share">Teilen</string>
     <string name="title_activity_start">StartActivity</string>
     <string name="logout">Logout</string>
     <string name="delete_diary">Tagebuch löschen</string>
+    <string name="delete_coordinates">Eigene Standorte löschen</string>
     <string name="new_db_entry">Neuer Eintrag</string>
     <string name="no_db_entry_available">Noch kein Eintrag verfügbar</string>
     <string name="diary_deleted_toast">Alle Tagebucheinträge wurden gelöscht.</string>
-    <string name="send_DB_per_mail">Per Mail senden</string>
     <string name="DB_is_empty">Dieses Tagebuch ist leer.</string>
     <string name="Mail_Head">Reisetagebuch</string>
     <string name="menu_title_home">Home</string>
     <string name="menu_title_diary">Tagebuch</string>
     <string name="menu_title_map">Karte</string>
     <string name="menu_title_settings">Einstellungen</string>
-    <string name="delete_db_entry_warning_long">Wollen Sie wirklich alle Tagebucheinträge unwiderruflich löschen?</string>
-    <string name="delete_db_entry_warning_title">Tagebucheinträge löschen</string>
+    <string name="delete_db_diary_entries_warning_title">Tagebucheinträge löschen</string>
+    <string name="delete_db_diary_entries_warning_long">Willst Du wirklich alle Tagebucheinträge unwiderruflich löschen?</string>
+    <string name="delete_db_map_entries_warning_title">Standorteinträge löschen</string>
+    <string name="delete_db_map_entries_warning_long">Willst Du wirklich alle Standorteinträge unwiderruflich löschen?</string>
+
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -31,8 +33,7 @@
     <string name="new_diary_entry_button_text">Neuer Tagebucheintrag</string>
     <string name="menu_title_gallery">Galerie</string>
     <string name="send_per_mail">Per Mail senden</string>
-    <string name="travelnote_app_logo_alt_text">Travelnote App Logo</string>
-    <string name="welcome_text">Willkommen bei Travelnote!</string>
+
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -43,11 +44,22 @@
     <string name="error_invalid_password">Das Passwort ist zu kurz</string>
     <string name="error_incorrect_password">Falsches Passwort oder Benutzername</string>
     <string name="error_field_required">Dieses Feld wird benötigt</string>
-    <string name="permission_rationale">"Kontakt Erlaubnis wird für die E-Mail Vervollständigung benötigt."
+    <string name="permission_rationale">"Kontakt-Erlaubnis wird für die E-Mail Vervollständigung benötigt."
     </string>
     <string name="hello_settings_text">Hallo</string>
     <string name="default_hello_settings_text">Guten Tag!</string>
     <string name="logout_text">Logout</string>
+    <string name="show_marker_all_users">Zeige alle Nutzer-Standorte</string>
+    <string name="mark_current_location">Aktuellen Standort makieren</string>
+    <string name="no_entries_different_users">Keine Einträge anderer Nutzer vorhanden!</string>
+    <string name="failed_location_permission">Travelnote hat keine Erlaubnis Deinen Standort abzurufen.</string>
+    <string name="current_location_marked_success">Ihr aktueller Standort wurde makiert!</string>
+    <string name="conn_play_services_failed">Verbindung zu Google Play Services nicht möglich.</string>
+    <string name="entry_success">Eintrag erfolgreich</string>
+    <string name="entry_failed">Eintrag konnte nicht dauerhaft gespeichert werden.</string>
+    <string name="location_missing">Bitte gebe einen Ort ein!</string>
+    <string name="unexpected_failure">Entschuldigung. Ein unerwarteter Fehler ist aufgetreten.</string>
+    <string name="map_display_failed">Karte kann nicht angezeigt werden.</string>
 
 
 </resources>

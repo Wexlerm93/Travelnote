@@ -1,8 +1,12 @@
 package de.ur.mi.travelnote;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,20 +33,29 @@ public class MainActivity extends AppCompatActivity {
 
         //get a Instance of Firebase Authentication Service
         auth = FirebaseAuth.getInstance();
-        //check if user is already logged-in --> redirect user to StartActivity, if not: handle log in or registration process
-        if(auth.getCurrentUser() != null){
-            //user already signed in
-            redirectToStart();
+
+        if(isOnline()){
+            //check if user is already logged-in --> redirect user to StartActivity, if not: handle log in or registration process
+            if(auth.getCurrentUser() != null){
+                //user already signed in
+                redirectToStart();
+            }else{
+                // user has to authenticate.. handle registration or log-in process and provide result
+                startActivityForResult(AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(
+                                Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                        //new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
+                        .setTheme(R.style.LoginTheme).build(), RC_SIGN_IN);
+            }
         }else{
-            // user has to authenticate.. handle registration or log-in process and provide result
-            startActivityForResult(AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(
-                            Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                    //new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-                                    new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
-                    .setTheme(R.style.LoginTheme).build(), RC_SIGN_IN);
+            TextView noConnectionText = (TextView) findViewById(R.id.no_conn_text);
+            TextView noConnectionTextDetail = (TextView) findViewById(R.id.no_conn_text_detail);
+            noConnectionText.setText("Keine Internetverbindung.");
+            noConnectionTextDetail.setText("Bitte überprüfe Deine Internetverbindung und starte die App erneut.");
         }
+
     }
 
 
@@ -66,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, StartActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }
 
