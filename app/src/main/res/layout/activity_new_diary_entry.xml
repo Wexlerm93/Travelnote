@@ -23,13 +23,13 @@
         android:maxLines="1"
         android:textAlignment="center" />
     <EditText
-        android:id="@+id/newDiaryEntryText"
+        android:id="@+id/newDiaryEntryContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         android:textAlignment="center"
         android:minLines="12"
-        android:hint="Titel" />
+        android:hint="Inhalt" />
     <EditText
         android:id="@+id/newDiaryEntryLocation"
         android:layout_width="match_parent"
@@ -37,7 +37,8 @@
         android:layout_gravity="center_horizontal"
         android:textAlignment="center"
         android:maxLines="1"
-        android:hint="Titel" />
+        android:hint="Ort" />
+
 
     <EditText
         android:id="@+id/newDiaryEntryDate"
@@ -46,6 +47,7 @@
         android:ems="10"
         android:maxLines="1"
         android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
         android:hint="Datum"
         android:inputType="date" />
 

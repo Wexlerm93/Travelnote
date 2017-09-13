@@ -50,37 +50,9 @@ public class Diary_Menu_Activity extends AppCompatActivity {
         refreshArrayList();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.action_buttons_diary_menu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_email) {
-            sendDbViaMail();
-        }
 
-        switch (item.getItemId()) {
-            // Method to handle if user wants to delete all db entries
-            case R.id.action_delete_diary:
-                //check if there are any db entries
-                if (entries.isEmpty()) {
-                    //if there are no db entries, just show toast
-                    Toast.makeText(Diary_Menu_Activity.this, R.string.DB_is_empty, Toast.LENGTH_LONG).show();
-                } else {
-                    //method to show dialog, if user wants to delete diary entries
-                    deleteDiaryEntriesDialog();
-                }
 
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
-        }
-    }
 
 
     private void sendDbViaMail() {

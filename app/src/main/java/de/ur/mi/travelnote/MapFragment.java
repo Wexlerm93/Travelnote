@@ -12,7 +12,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -33,7 +32,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
@@ -47,9 +45,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import java.io.IOException;
 import java.util.List;
+import de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper.DatabaseHelper;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -57,6 +55,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     final double LAT_EU = 53.0000;
     final double LNG_EU = 9.0000;
     final int DEFAULT_ZOOM = 3;
+    final int ORIGIN_MAP = 1;
+    private boolean active;
     String userID;
     String userName;
     EditText editText;
@@ -65,7 +65,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     View mView;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    DatabaseHelperMap mDatabaseHelper;
+    DatabaseHelper mDatabaseHelper;
 
 
     public MapFragment() {
@@ -80,14 +80,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDatabaseHelper = new DatabaseHelperMap(getActivity());
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user != null) {
-            userID = user.getUid();
-            userName = user.getDisplayName();
-
-        }
+        mDatabaseHelper = new DatabaseHelper(getActivity());
+        getUserInfo();
 
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_map, container, false);
@@ -122,20 +116,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -173,14 +154,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     private void displayStoredMapMarker() {
-        Cursor data = mDatabaseHelper.getData(userID);
+        Cursor data = mDatabaseHelper.getMapCoordinates(userID);
         while (data.moveToNext()) {
             newMapMarker(data.getDouble(1), data.getDouble(2));
         }
     }
 
     private void displayStoredMapMarkerAllUser() {
-        Cursor data = mDatabaseHelper.getDataAllUser(userID);
+        Cursor data = mDatabaseHelper.getMapCoordinatesAllUser(userID);
         if (data == null || data.getCount() < 1) {
             Toast.makeText(getContext(), R.string.no_entries_different_users, Toast.LENGTH_SHORT).show();
         } else {
@@ -192,7 +173,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 data.close();
             }
         }
-
     }
 
     private void markNewLocation() {
@@ -235,7 +215,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void addCoordinatesToDB(double latitude, double longitude, String ID, String name) {
         if (!userID.equals("")) {
-            boolean insertData = mDatabaseHelper.addCoordinates(latitude, longitude, ID, name);
+            boolean insertData = mDatabaseHelper.addCoordinates(latitude, longitude, ID, name, ORIGIN_MAP);
             if (!insertData) {
                 displayShortToast(R.string.entry_failed);
             }
@@ -246,7 +226,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void displayShortToast(int s) {
-        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -269,20 +249,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mGoogleMap.moveCamera(cameraUpdate);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+
+
 
     /*
         Method to check wether Google Services are available or not.. Google Services are needed to access Google APIs
@@ -311,7 +279,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 double lng = location.getLongitude();
                 newMapMarker(lang, lng);
                 addCoordinatesToDB(lang, lng, userID, userName);
-                displayShortToast(R.string.current_location_marked_success);
+                if(active){
+                    displayShortToast(R.string.current_location_marked_success);
+                }
             }
 
             @Override
@@ -326,8 +296,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onProviderDisabled(String s) {
-                enableLocationProviderDialog();
-
+                //check first if Fragment is active, to avoid crashes
+                if (active){
+                    enableLocationProviderDialog();
+                }
 
             }
         };
@@ -412,11 +384,48 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Method to clear all database entries from current user and call fragment again to update UI
      */
     private void deleteCoordinateEntries() {
-        mDatabaseHelper.clearDatabase(userID);
+        mDatabaseHelper.clearTableMapCoordinatesCurrentUser(userID);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content, new MapFragment()).commit();
         displayShortToast(R.string.diary_deleted_toast);
     }
 
+    //Sets user info provided through Firebase, according to currently logged-in user
+    private void getUserInfo(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            userID = user.getUid();
+            userName = user.getDisplayName();
+        }
+    }
+
+
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        active = true;
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        active = false;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    //Required Interface
+    public interface OnFragmentInteractionListener {
+    }
 }

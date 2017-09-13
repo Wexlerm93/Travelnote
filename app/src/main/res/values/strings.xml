@@ -21,7 +21,9 @@
     <string name="menu_title_map">Karte</string>
     <string name="menu_title_settings">Einstellungen</string>
     <string name="delete_db_diary_entries_warning_title">Tagebucheinträge löschen</string>
-    <string name="delete_db_diary_entries_warning_long">Willst Du wirklich alle Tagebucheinträge unwiderruflich löschen?</string>
+    <string name="delete_db_diary_entries_warning_long">Willst Du wirklich alle Tagebucheinträge unwiderruflich löschen? \nOrte werden auch gelöscht!</string>
+    <string name="delete_db_single_diary_entry_warning_title">Tagebucheintrag löschen</string>
+    <string name="delete_db_single_diary_entry_warning_long">Willst Du wirklich diesen Tagebucheintrag dauerhaft löschen?\nDer Ort wird nicht gelöscht.</string>
     <string name="delete_db_map_entries_warning_title">Standorteinträge löschen</string>
     <string name="delete_db_map_entries_warning_long">Willst Du wirklich alle Standorteinträge unwiderruflich löschen?</string>
 
@@ -60,6 +62,8 @@
     <string name="location_missing">Bitte gebe einen Ort ein!</string>
     <string name="unexpected_failure">Entschuldigung. Ein unerwarteter Fehler ist aufgetreten.</string>
     <string name="map_display_failed">Karte kann nicht angezeigt werden.</string>
+    <string name="fields_missing_text">Bitte fülle alle Felder aus!</string>
+    <string name="location_hint_map_marker">Wo warst Du schon? (Ortsangabe)</string>
 
 
 </resources>

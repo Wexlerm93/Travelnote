@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:textAlignment="center"
-            android:hint="Wo warst Du schon?"
+            android:hint="@string/location_hint_map_marker"
             android:inputType="text"
             android:layout_marginBottom="@dimen/travelnote_margin_default"/>
         <Button

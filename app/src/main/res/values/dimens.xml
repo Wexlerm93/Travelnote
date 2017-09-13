@@ -4,4 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="travelnote_margin_default">10dp</dimen>
+    <dimen name="diary_list_view_padding_default">15dp</dimen>
+    <dimen name="diary_list_view_padding_small">8dp</dimen>
+    <dimen name="diary_list_view_padding_end">7dp</dimen>
 </resources>
