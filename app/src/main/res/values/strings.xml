@@ -35,7 +35,7 @@
     <string name="to_gallery_button_text">Neue Galerie</string>
     <string name="new_diary_entry_button_text">Neuer Tagebucheintrag</string>
     <string name="menu_title_gallery">Galerie</string>
-    <string name="send_per_mail">Per Mail senden</string>
+    <string name="send_per_mail">Tagebucheinträge per Mail senden</string>
 
 
     <!-- Strings related to login -->

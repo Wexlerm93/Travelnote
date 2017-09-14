@@ -265,17 +265,19 @@ public class DiaryFragment extends Fragment {
         intent.setData(Uri.parse("mailto:"));
         intent.putExtra(Intent.EXTRA_SUBJECT, "Reisetagebuch");
         StringBuilder sb = new StringBuilder();
-
+        String openingText = "Hey, anbei findest du die Travelnotes von " + userName + ". Viel Spaß damit!" + "\n" + "\n";
+        sb.append(openingText);
         Cursor data = mDatabaseHelper.getDiaryEntriesCurrentUser(userID);
+        int entryCounter = 1;
 
         if (data == null || data.getCount() < 1) {
             Toast.makeText(getContext(), R.string.no_entries_different_users, Toast.LENGTH_SHORT).show();
         } else {
             try {
                 while (data.moveToNext()) {
-                    String s = "Titel: " + data.getString(1) + "\n" + "\n";
+                    String s = "Eintrag " + entryCounter + ": " + data.getString(1) + " (" + data.getString(3) + ", " + data.getString(4) + ")\n" + data.getString(2) + "\n" + "\n";
                     sb.append(s);
-                    Toast.makeText(getContext(), "Dings ist: " + data.getString(1), Toast.LENGTH_SHORT).show();
+                    entryCounter++;
                 }
             } finally {
                 data.close();
