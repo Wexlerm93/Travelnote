@@ -19,16 +19,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:hint="Dein Tagebucheintrag Titel"
+        android:hint="Titel"
         android:maxLines="1"
         android:textAlignment="center" />
     <EditText
         android:id="@+id/newDiaryEntryContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:textAlignment="center"
         android:minLines="12"
-        android:hint="Schreibe über deine Erlebnisse!" />
+        android:hint="Inhalt" />
     <EditText
         android:id="@+id/newDiaryEntryLocation"
         android:layout_width="match_parent"
@@ -36,7 +37,7 @@
         android:layout_gravity="center_horizontal"
         android:textAlignment="center"
         android:maxLines="1"
-        android:hint="Gib hier die zugehörige Ortsangabe ein!" />
+        android:hint="Ort" />
 
 
     <EditText

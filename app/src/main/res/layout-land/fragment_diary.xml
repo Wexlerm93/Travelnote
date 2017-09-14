@@ -1,0 +1,41 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="de.ur.mi.travelnote.DiaryFragment">
+
+
+
+
+
+    <ListView
+        android:id="@+id/diary_list_view"
+        android:layout_weight="0.5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <TextView
+        android:id="@+id/diary_empty_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_gravity="center_horizontal"/>
+
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:theme="@style/Theme.BasicTravelnote.Light.NoActionBar"
+        android:id="@+id/new_Entry_Button_Float"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/travelnote_margin_default"
+        android:layout_gravity="center|end"
+        android:clickable="true"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_mode_edit_white_24dp"
+        />
+
+
+</FrameLayout>

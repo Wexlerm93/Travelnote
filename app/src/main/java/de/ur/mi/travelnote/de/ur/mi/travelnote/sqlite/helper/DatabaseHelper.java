@@ -154,6 +154,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     }
 
+    public Cursor getSelectedDiaryEntry(long id){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_DIARY_ENTRIES + " WHERE _id = " + id;
+        return sqLiteDatabase.rawQuery(query, null);
+    }
+
 
 
 

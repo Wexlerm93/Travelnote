@@ -27,6 +27,7 @@
     <string name="delete_db_single_diary_entry_warning_long">Willst Du wirklich diesen Tagebucheintrag dauerhaft löschen?\nDer Ort wird nicht gelöscht.</string>
     <string name="delete_db_map_entries_warning_title">Standorteinträge löschen</string>
     <string name="delete_db_map_entries_warning_long">Willst Du wirklich alle Standorteinträge unwiderruflich löschen?</string>
+    <string name="share_diary_entry_text">Versende Deinen ausgewählten Tagebucheintrag mit Deiner Lieblingsapp.</string>
 
 
 

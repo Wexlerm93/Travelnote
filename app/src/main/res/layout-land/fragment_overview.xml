@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="de.ur.mi.travelnote.OverviewFragment"
+    android:orientation="horizontal"
+    android:weightSum="3">
+
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/diary_image_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ow_diary_button_image"
+            android:text="@string/new_diary_entry_button_text"
+            android:textAlignment="center"
+            android:textColor="@color/travelnote_blue"
+            android:textSize="21sp"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/gallery_image_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ow_gallery_button_image"
+            android:text="@string/to_gallery_button_text"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="21sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/map_image_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ow_map_button_image"
+            android:text="@string/to_map_button_text"
+            android:textAlignment="center"
+            android:textColor="@color/travelnote_red"
+            android:textSize="21sp" />
+    </LinearLayout>
+
+
+
+
+
+
+
+
+</LinearLayout>

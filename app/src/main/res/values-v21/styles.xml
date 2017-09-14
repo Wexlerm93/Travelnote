@@ -4,7 +4,7 @@
     <style name="Theme.BasicTravelnote.Light.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/travelnote_red</item>
         <item name="android:colorBackground">@color/travelnote_grey_light</item>
-        <item name="android:statusBarColor">@color/travelnote_blue_light</item>
+        <item name="android:statusBarColor">@color/travelnote_blue</item>
         <item name="colorPrimary">@color/travelnote_blue</item>
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:textColorPrimary">@color/white</item>

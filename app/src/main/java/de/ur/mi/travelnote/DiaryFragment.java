@@ -3,17 +3,20 @@ package de.ur.mi.travelnote;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,10 +42,14 @@ import de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper.DatabaseHelper;
 
 public class DiaryFragment extends Fragment {
 
+    private static final String TAG = "FragmentTest";
+
+
     private final int ORIGIN = 0;
     String userID;
     String userName;
-    long idTemp;
+    long deleteID;
+    long sendID;
     private boolean fragmentStatus;
     private OnFragmentInteractionListener mListener;
     private DatabaseHelper mDatabaseHelper;
@@ -72,6 +79,7 @@ public class DiaryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "OnCreateView");
         fragmentStatus = true;
         // Inflate the layout for this fragment
         View view =inflater.inflate(R.layout.fragment_diary, container, false);
@@ -81,19 +89,36 @@ public class DiaryFragment extends Fragment {
         mListView = (ListView) view.findViewById(R.id.diary_list_view);
         populateListView();
 
-        Button newEntry = (Button) view.findViewById(R.id.new_Entry_Button);
-        newEntry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), NewDiaryEntryActivity.class);
-                startActivity(intent);
-            }
-        });
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            Button newEntry = (Button) view.findViewById(R.id.new_Entry_Button);
+            newEntry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getContext(), NewDiaryEntryActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }else {
+            FloatingActionButton newEntryFloat = (FloatingActionButton) view.findViewById(R.id.new_Entry_Button_Float);
+            newEntryFloat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getContext(), NewDiaryEntryActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+
+
+
+
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Maybe do share dialog?
+                //Toast.makeText(getContext(), "Dings ist: " + i, Toast.LENGTH_SHORT).show();
+                showShareEntryDialog(l);
+                //sendDiaryEntry(l);
             }
         });
 
@@ -132,8 +157,8 @@ public class DiaryFragment extends Fragment {
 
 
     private void showDeleteSingleEntryDialog(long i) {
-        this.idTemp = i;
-        final int helper = (int) idTemp;
+        this.deleteID= i;
+        final int helper = (int) deleteID;
         //if there are db entries build alert dialog to avoid deletion by accident
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
         alertDialog.setTitle(R.string.delete_db_single_diary_entry_warning_title);
@@ -188,6 +213,29 @@ public class DiaryFragment extends Fragment {
         alertDialog.show();
     }
 
+    private void showShareEntryDialog(long id) {
+        this.sendID = id;
+        //if there are db entries build alert dialog to avoid deletion by accident
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setMessage(R.string.share_diary_entry_text);
+
+
+        //if user still clicks yes, then delete db entries
+        alertDialog.setPositiveButton("Und los!", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                sendDiaryEntry(sendID);
+            }
+        });
+
+        //if user cancels, do nothing
+        alertDialog.setNegativeButton("Lieber doch nicht.", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing here.
+            }
+        });
+        alertDialog.show();
+    }
+
 
     private void refreshFragment(){
         FragmentManager fragmentManager = getFragmentManager();
@@ -196,9 +244,21 @@ public class DiaryFragment extends Fragment {
     }
 
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState: ");
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        Log.d(TAG, "onViewStateRestored: ");
+    }
 
     @Override
     public void onResume() {
+        Log.d(TAG, "onResume: ..");
         super.onResume();
         if(!fragmentStatus){
             fragmentStatus = true;
@@ -240,10 +300,8 @@ public class DiaryFragment extends Fragment {
                 if(listData.isEmpty()){
                     Toast.makeText(getContext(), "Keine Einträge vorhanden!", Toast.LENGTH_SHORT).show();
                 }else {
-                    sendDbViaMail();
+                    mailDiaryEntries();
                 }
-                //sendDbViaMail();
-                //mDatabaseHelper.deleteDB();
                 return true;
             case R.id.action_delete_diary:
                 if(listData.isEmpty()){
@@ -257,15 +315,48 @@ public class DiaryFragment extends Fragment {
         }
     }
 
+    private void sendDiaryEntry(long i){
+        Cursor data = mDatabaseHelper.getSelectedDiaryEntry(i);
+        String sTitle = "";
+        String sContent = "";
+        String sLocation = "";
+        String sDate = "";
 
-    private void sendDbViaMail() {
+
+        if (data == null || data.getCount() < 1) {
+            Toast.makeText(getContext(), "Kein Eintrag..", Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                data.moveToFirst();
+                sTitle = data.getString(1);
+                sContent = data.getString(2);
+                sLocation = data.getString(3);
+                sDate = data.getString(4);
+            } catch (CursorIndexOutOfBoundsException e){
+                //...
+            }finally {
+                data.close();
+            }
+        }
+
+
+        String shareBody = sTitle + " (vom " + sDate + " in " + sLocation + ")\n" + sContent;
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Mein Reisetagebucheintrag");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, "Ausgewählen Tagebucheintrag verschicken"));
+
+    }
+
+    private void mailDiaryEntries() {
         Intent intent = null, chooser = null;
 
         intent = new Intent(Intent.ACTION_SEND);
         intent.setData(Uri.parse("mailto:"));
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Reisetagebuch");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Reisetagebuch von " + userName);
         StringBuilder sb = new StringBuilder();
-        String openingText = "Hey, anbei findest du die Travelnotes von " + userName + ". Viel Spaß damit!" + "\n" + "\n";
+        String openingText = "Hey, anbei findest du meine Travelnotes. Viel Spaß damit!" + "\n" + "\n";
         sb.append(openingText);
         Cursor data = mDatabaseHelper.getDiaryEntriesCurrentUser(userID);
         int entryCounter = 1;
@@ -286,7 +377,7 @@ public class DiaryFragment extends Fragment {
 
         intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
         intent.setType("message/rfc822");
-        chooser = Intent.createChooser(intent, "Send Email");
+        chooser = Intent.createChooser(intent, "Versende Tagebucheinträge..");
         startActivity(chooser);
     }
 

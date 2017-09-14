@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
@@ -254,10 +255,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
 
-
     /*
-        Method to check wether Google Services are available or not.. Google Services are needed to access Google APIs
-     */
+            Method to check wether Google Services are available or not.. Google Services are needed to access Google APIs
+         */
     private boolean googleServicesAvailable() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int isAvailable = apiAvailability.isGooglePlayServicesAvailable(getContext());
@@ -276,6 +276,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void getCurrentLocation() {
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
+
+
+
             @Override
             public void onLocationChanged(Location location) {
                 double lang = location.getLatitude();
