@@ -14,6 +14,7 @@
     <string name="new_db_entry">Neuer Eintrag</string>
     <string name="no_db_entry_available">Noch kein Eintrag verfügbar</string>
     <string name="diary_deleted_toast">Alle Tagebucheinträge wurden gelöscht.</string>
+    <string name="marker_deleted_toast">Alle Standorteinträge wurden gelöscht.</string>
     <string name="DB_is_empty">Dieses Tagebuch ist leer.</string>
     <string name="Mail_Head">Reisetagebuch</string>
     <string name="menu_title_home">Home</string>
@@ -60,7 +61,7 @@
     <string name="entry_success">Eintrag erfolgreich</string>
     <string name="entry_failed">Eintrag konnte nicht dauerhaft gespeichert werden.</string>
     <string name="location_missing">Bitte gebe einen Ort ein!</string>
-    <string name="unexpected_failure">Entschuldigung. Ein unerwarteter Fehler ist aufgetreten.</string>
+    <string name="map_entry_failed">Entschuldigung. Ort konnte nicht auf Karte gespeichert werden.</string>
     <string name="map_display_failed">Karte kann nicht angezeigt werden.</string>
     <string name="fields_missing_text">Bitte fülle alle Felder aus!</string>
     <string name="location_hint_map_marker">Wo warst Du schon? (Ortsangabe)</string>

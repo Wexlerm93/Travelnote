@@ -94,7 +94,6 @@ public class DiaryFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //Maybe do share dialog?
-                Toast.makeText(getContext(), "This is: " + l, Toast.LENGTH_SHORT).show();
             }
         });
 

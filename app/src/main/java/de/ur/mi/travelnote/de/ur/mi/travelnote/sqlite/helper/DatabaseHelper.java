@@ -8,9 +8,11 @@ import android.database.sqlite.SQLiteAbortException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.w3c.dom.Text;
+
 public class DatabaseHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 9;
     private static final String DATABASE_NAME = "travelnoteDatabaseBasic";
 
     private static final String TABLE_MAP_COORDINATES = "map_marker";
@@ -20,23 +22,25 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String USER_ID = "user_id";
     private static final String USER_NAME = "user_name";
     private static final String ORIGIN = "origin";
-    private final int ORIGIN_DIARY = 0;
+
 
     //Related to Map Coordinates Table
     private static final String MAP_LAT = "lat";
     private static final String MAP_LNG = "lng";
+    private static final double BIASED_LAT = -66.666666;
+    private static final double BIASED_LNG = -145.678901;
+    private static final String EXCLUDE_BIASED_COORDINATES =  "') AND (" + MAP_LAT + " != " + BIASED_LAT + " ) AND (" + MAP_LNG + " != " + BIASED_LNG + "))";
     private static final String CREATE_TABLE_MAP_MARKER =
             "CREATE TABLE " + TABLE_MAP_COORDINATES + " ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + MAP_LAT + " DOUBLE, " + MAP_LNG + " DOUBLE, " + USER_ID + " STRING, " + USER_NAME + " STRING, " + ORIGIN + " INTEGER)";
 
     //Related to Diary Contents
     private static final String DIARY_ENTRY_TITLE = "diary_title";
     private static final String DIARY_ENTRY_CONTENT = "diary_content";
-    private static final String DIARY_ENTRY_LOC_LAT = "diary_loc_lat";
-    private static final String DIARY_ENTRY_LOC_LNG = "diary_loc_lng";
+    private static final String DIARY_ENTRY_LOC_TEXT = "diary_loc_text";
     private static final String DIARY_ENTRY_DATE = "diary_date";
     private static final String CREATE_TABLE_DIARY_CONTENT =
-            "CREATE TABLE " + TABLE_DIARY_ENTRIES + " ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + DIARY_ENTRY_TITLE + " STRING, " + DIARY_ENTRY_CONTENT + " STRING, "
-                    + DIARY_ENTRY_LOC_LAT + " DOUBLE, " + DIARY_ENTRY_LOC_LNG + " DOUBLE, " + DIARY_ENTRY_DATE + " DATE," + USER_ID + " STRING, " + USER_NAME + " STRING)";
+            "CREATE TABLE " + TABLE_DIARY_ENTRIES + " ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + DIARY_ENTRY_TITLE + " STRING, " + DIARY_ENTRY_CONTENT + " STRING, " + DIARY_ENTRY_LOC_TEXT + " STRING, "
+                    + DIARY_ENTRY_DATE + " DATE," + USER_ID + " STRING, " + USER_NAME + " STRING)";
 
 
 
@@ -79,16 +83,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     public Cursor getMapCoordinates(String userID){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_MAP_COORDINATES + " WHERE " + USER_ID + "= '" + userID + "'";
-        Cursor data = sqLiteDatabase.rawQuery(query, null);
-        return data;
+        String query = "SELECT * FROM " + TABLE_MAP_COORDINATES + " WHERE(( " + USER_ID + "= '" + userID + "') AND (" + MAP_LAT + " != " + BIASED_LAT + " ) AND (" + MAP_LNG + " != " + BIASED_LNG + "))";
+        return sqLiteDatabase.rawQuery(query, null);
     }
 
     public Cursor getMapCoordinatesAllUser(String userID){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_MAP_COORDINATES + " WHERE " + USER_ID + " != '" + userID + "'";
-        Cursor data = sqLiteDatabase.rawQuery(query, null);
-        return data;
+        String query = "SELECT * FROM " + TABLE_MAP_COORDINATES + " WHERE(( " + USER_ID + " != '" + userID + EXCLUDE_BIASED_COORDINATES;
+        return sqLiteDatabase.rawQuery(query, null);
     }
 
     public void clearTableMapCoordinatesCurrentUser(String userID) {
@@ -97,13 +99,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         sqLiteDatabase.execSQL(clearDBQuery);
     }
 
-    public boolean addDiaryEntry(String title, String content, double lat, double lng, String date, String userID, String userName){
+    public boolean addDiaryEntry(String title, String content, String location, double lat, double lng, String date, String userID, String userName){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DIARY_ENTRY_TITLE, title);
         contentValues.put(DIARY_ENTRY_CONTENT, content);
-        contentValues.put(DIARY_ENTRY_LOC_LAT, lat);
-        contentValues.put(DIARY_ENTRY_LOC_LNG, lng);
+        contentValues.put(DIARY_ENTRY_LOC_TEXT, location);
         contentValues.put(DIARY_ENTRY_DATE, date);
         contentValues.put(USER_ID, userID);
         contentValues.put(USER_NAME, userName);
@@ -111,18 +112,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         addCoordinates(lat, lng, userID, userName, 0);
 
         long result = sqLiteDatabase.insert(TABLE_DIARY_ENTRIES, null,contentValues);
-        if(result == -1){
-            return false;
-        }else {
-            return true;
-        }
+
+        //return true, if insert was successfull (result is greater than -1)
+        return (result > -1);
     }
 
     public Cursor getDiaryEntriesCurrentUser(String userID){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_DIARY_ENTRIES + " WHERE " + USER_ID + " = '" + userID + "'";
-        Cursor data = sqLiteDatabase.rawQuery(query, null);
-        return data;
+        return sqLiteDatabase.rawQuery(query, null);
     }
 
     public boolean clearTableDiaryEntriesCurrentUser(String userID, int originNo) {
@@ -147,7 +145,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         try {
             SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
             String clearDBQuery = "DELETE FROM " + TABLE_DIARY_ENTRIES + " WHERE(( " + USER_ID + "= '" + userID + "') AND (_id = " + id +"))" ;
-
             sqLiteDatabase.execSQL(clearDBQuery);
             result = true;
         }catch (SQLiteAbortException e){

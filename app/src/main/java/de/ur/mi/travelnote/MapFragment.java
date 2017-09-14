@@ -47,6 +47,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
+
 import de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper.DatabaseHelper;
 
 
@@ -202,7 +204,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 goToLocationZoom(lat, lng, DEFAULT_ZOOM);
             } catch (IOException e) {
                 e.printStackTrace();
-                displayShortToast(R.string.unexpected_failure);
+                displayShortToast(R.string.map_entry_failed);
             }
             editText.setText("");
         } else {
@@ -232,7 +234,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void newMapMarker(double latitude, double longitude) {
         LatLng latlng = new LatLng(latitude, longitude);
-        MarkerOptions options = new MarkerOptions().position(latlng);
+        String string = String.format(Locale.GERMAN,"%.6f", latitude) ;
+        MarkerOptions options = new MarkerOptions().title(string).position(latlng);
         mGoogleMap.addMarker(options);
     }
 
@@ -388,7 +391,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content, new MapFragment()).commit();
-        displayShortToast(R.string.diary_deleted_toast);
+        displayShortToast(R.string.marker_deleted_toast);
     }
 
     //Sets user info provided through Firebase, according to currently logged-in user

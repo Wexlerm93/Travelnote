@@ -12,7 +12,7 @@ import android.widget.TextView;
 public class DiaryCursorAdapter extends CursorAdapter {
 
     Context context;
-    long ident;
+    private long ident;
 
 
     public DiaryCursorAdapter(Context context, Cursor c) {
@@ -26,22 +26,21 @@ public class DiaryCursorAdapter extends CursorAdapter {
         TextView title = (TextView) view.findViewById(R.id.listitem_title);
         title.setText(cursor.getString(1));
         TextView location = (TextView) view.findViewById(R.id.listitem_location);
-        location.setText(cursor.getString(2));
+        location.setText(cursor.getString(3));
         TextView date = (TextView) view.findViewById(R.id.listitem_date);
-        date.setText(cursor.getString(5));
+        date.setText(cursor.getString(4));
         TextView content = (TextView) view.findViewById(R.id.listitem_content);
         content.setText(cursor.getString(2));
     }
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View view = layoutInflater.inflate(R.layout.listview_diary_entries, parent, false);
-        return view;
+        return layoutInflater.inflate(R.layout.listview_diary_entries, parent, false);
+        //return view;
     }
 
     @Override
     public long getItemId(int position) {
-        //return super.getItemId(position);
         return ident;
     }
 }

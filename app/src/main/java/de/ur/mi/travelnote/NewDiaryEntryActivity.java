@@ -135,12 +135,8 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
             double lng = getLocation(sLocation)[1];
 
 
-
-
-
-
             String sDate = mDay + "." + (mMonth+1) + "." + mYear;
-            boolean insert = mDatabaseHelper.addDiaryEntry(sTitle,sContent,lat,lng,sDate, userID, userName);
+            boolean insert = mDatabaseHelper.addDiaryEntry(sTitle,sContent,sLocation,lat,lng,sDate, userID, userName);
             if(insert){
                 Toast.makeText(NewDiaryEntryActivity.this, "Eintrag erfolgreich gespeichert", Toast.LENGTH_SHORT).show();
                 clearFields();
@@ -177,14 +173,12 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
                     result[0] = address.getLatitude();
                     result[1] = address.getLongitude();
                 }else {
-                    result[0] = 91.0;
-                    result[1] = 181.0;
+                    result[0] = -66.666666;
+                    result[1] = -145.678901;
                 }
-
-
             } catch (IOException e) {
                 e.printStackTrace();
-                displayShortToast(R.string.unexpected_failure);
+                displayShortToast(R.string.map_entry_failed);
             }
 
         } else {
