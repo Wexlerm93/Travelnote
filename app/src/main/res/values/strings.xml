@@ -30,7 +30,6 @@
     <string name="share_diary_entry_text">Versende Deinen ausgewählten Tagebucheintrag mit Deiner Lieblingsapp.</string>
 
 
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="to_map_button_text">Zur Karte</string>
     <string name="to_gallery_button_text">Neue Galerie</string>
@@ -65,7 +64,15 @@
     <string name="map_entry_failed">Entschuldigung. Ort konnte nicht auf Karte gespeichert werden.</string>
     <string name="map_display_failed">Karte kann nicht angezeigt werden.</string>
     <string name="fields_missing_text">Bitte fülle alle Felder aus!</string>
-    <string name="location_hint_map_marker">Wo warst Du schon? (Ortsangabe)</string>
+    <string name="location_hint_map_marker">Wo warst Du schon? (Ort/Land)</string>
+    <string name="title_activity_show_location_list">ShowLocationListActivity</string>
+    <string name="diary_entry_hint_title">Dein Tagebucheintrag Titel</string>
+    <string name="diary_entry_hint_content">Schreibe über deine Erlebnisse!</string>
+    <string name="diary_entry_hint_location">Gib hier Ort oder Land ein</string>
+    <string name="diary_entry_hint_date">Datum</string>
+    <string name="diary_entry_button_text">Jetzt eintragen!</string>
+    <string name="failed_saving_entry">Eintrag konnte nicht gespeichert werden!</string>
+    <string name="entry_successful_toast">Eintrag erfolgreich gespeichert</string>
 
 
 </resources>

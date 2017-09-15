@@ -1,7 +1,5 @@
 package de.ur.mi.travelnote;
 
-
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
@@ -9,8 +7,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,10 +16,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
@@ -31,18 +25,15 @@ import java.util.List;
 import de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper.DatabaseHelper;
 
 public class NewDiaryEntryActivity extends AppCompatActivity {
+    static final int DATE_ID = 0;
+    private DatabaseHelper mDatabaseHelper;
+    private String userID;
+    private String userName;
 
-    DatabaseHelper mDatabaseHelper;
-    String userID;
-    String userName;
-
-    EditText title;
-    EditText content;
-    EditText location;
-    EditText date;
+    private EditText title, content, location, date;
 
     private int mYear, mMonth, mDay, sYear, sMonth, sDay;
-    static final int DATE_ID = 0;
+    
     Calendar calendar = Calendar.getInstance();
 
     @Override
@@ -51,6 +42,7 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_diary_entry);
         Toolbar toolbar = (Toolbar) findViewById(R.id.basic_toolbar);
         setSupportActionBar(toolbar);
+
         mDatabaseHelper = new DatabaseHelper(this);
         getUserInfo();
         initTextFields();
@@ -67,7 +59,6 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
             }
         });
 
-
         Button newEntry = (Button) findViewById(R.id.newDiaryEntryButton);
         newEntry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,10 +67,30 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
 
             }
         });
+        loadLatestState();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_buttons_diary_entry_menu, menu);
+        return true;
+    }
 
-        LoadPreferences();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_close_new_entry){
+            clearLatestState();
+            finish();
+            return true;
+        }else{
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
+    @Override
+    public void onBackPressed() {
+        saveCurrentState();
+        super.onBackPressed();
     }
 
 
@@ -125,7 +136,6 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
     }
 
     private void saveToDatabase(){
-
         String sTitle = title.getText().toString();
         String sContent = content.getText().toString();
         String sLocation = location.getText().toString();
@@ -138,23 +148,24 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
             String sDate = mDay + "." + (mMonth+1) + "." + mYear;
             boolean insert = mDatabaseHelper.addDiaryEntry(sTitle,sContent,sLocation,lat,lng,sDate, userID, userName);
             if(insert){
-                Toast.makeText(NewDiaryEntryActivity.this, "Eintrag erfolgreich gespeichert", Toast.LENGTH_SHORT).show();
+                displayShortToast(R.string.entry_successful_toast);
                 clearFields();
                 title.requestFocus();
-                clearSharedPreferences();
+                clearLatestState();
             }else{
-                Toast.makeText(NewDiaryEntryActivity.this, "Eintrag konnte nicht gespeichert werden!", Toast.LENGTH_SHORT).show();
+                displayShortToast(R.string.failed_saving_entry);
             }
         }else {
             displayShortToast(R.string.fields_missing_text);
         }
 
-
-
     }
 
+
+    
+    
     private boolean checkEmptyTextFields(String s1, String s2, String s3){
-        if(s1.equals("") || s2.equals("") || s3.equals("")){
+        if (s1.equals("") || s2.equals("") || s3.equals("")){
             return false;
         }else {
             return true;
@@ -173,8 +184,10 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
                     result[0] = address.getLatitude();
                     result[1] = address.getLongitude();
                 }else {
-                    result[0] = -66.666666;
-                    result[1] = -145.678901;
+                    double BIASED_LAT = -66.666666;
+                    result[0] = BIASED_LAT;
+                    double BIASED_LNG = -145.678901;
+                    result[1] = BIASED_LNG;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -198,28 +211,7 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
         date.setText("");
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.action_buttons_diary_entry_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if(item.getItemId() == R.id.action_close_new_entry){
-            clearSharedPreferences();
-            finish();
-            return true;
-
-        }else{
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-
-
-    private void SavePreferences(){
+    private void saveCurrentState(){
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("title", title.getText().toString());
@@ -229,7 +221,7 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    private void LoadPreferences(){
+    private void loadLatestState(){
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String sTitle = sharedPreferences.getString("title", "");
         String sContent = sharedPreferences.getString("content", "");
@@ -241,15 +233,11 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
         //date.setText(sDate);
     }
 
-    private void clearSharedPreferences() {
+    private void clearLatestState() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear().apply();
     }
 
-    @Override
-    public void onBackPressed() {
-        SavePreferences();
-        super.onBackPressed();
-    }
+   
 }

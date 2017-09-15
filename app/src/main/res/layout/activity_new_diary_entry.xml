@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/basic_toolbar"
@@ -19,44 +19,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:hint="Dein Tagebucheintrag Titel"
+        android:hint="@string/diary_entry_hint_title"
         android:maxLines="1"
         android:textAlignment="center" />
+
     <EditText
         android:id="@+id/newDiaryEntryContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
+        android:hint="@string/diary_entry_hint_content"
         android:minLines="12"
-        android:hint="Schreibe über deine Erlebnisse!" />
+        android:textAlignment="center" />
+
     <EditText
         android:id="@+id/newDiaryEntryLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:textAlignment="center"
+        android:hint="@string/diary_entry_hint_location"
         android:maxLines="1"
-        android:hint="Gib hier die zugehörige Ortsangabe ein!" />
+        android:textAlignment="center" />
 
 
     <EditText
         android:id="@+id/newDiaryEntryDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:maxLines="1"
         android:layout_gravity="center_horizontal"
-        android:textAlignment="center"
-        android:hint="Datum"
-        android:inputType="date" />
+        android:ems="10"
+        android:hint="@string/diary_entry_hint_date"
+        android:inputType="date"
+        android:maxLines="1"
+        android:textAlignment="center" />
 
 
     <Button
         android:id="@+id/newDiaryEntryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/travelnote_margin_default"
         android:background="@color/travelnote_red"
-        android:textColor="@color/white"
-        android:text="Jetzt eintragen!"
-        android:layout_margin="@dimen/travelnote_margin_default"/>
+        android:text="@string/diary_entry_button_text"
+        android:textColor="@color/white" />
 </LinearLayout>

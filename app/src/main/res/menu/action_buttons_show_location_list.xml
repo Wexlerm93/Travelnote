@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+
+    <item
+        android:id="@+id/action_close_new_entry"
+        android:enabled="true"
+        android:icon="@drawable/ic_close_white_24dp"
+        android:title="Eintrag abbrechen"
+        android:visible="true"
+        app:showAsAction="ifRoom"/>
+
+
+</menu>

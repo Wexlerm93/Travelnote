@@ -13,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -23,7 +24,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.media.VolumeProviderCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -71,6 +74,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     DatabaseHelper mDatabaseHelper;
 
 
+
     public MapFragment() {
         // Required empty public constructor
     }
@@ -116,7 +120,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         } else {
             displayShortToast(R.string.map_display_failed);
         }
-
     }
 
 
@@ -125,10 +128,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        if(googleMap.getMapType() != GoogleMap.MAP_TYPE_NORMAL){
+            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
         goToLocationZoom(LAT_EU, LNG_EU, DEFAULT_ZOOM);
-        displayStoredMapMarker();
-
+        new MarkerAsyncTask().execute();
     }
 
 
@@ -149,34 +153,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 deleteDBCoordinatesDialog();
                 return true;
             case R.id.action_show_marker_all_user:
-                displayStoredMapMarkerAllUser();
+                new MarkerAsyncTaskAllUsers().execute();
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
 
-    private void displayStoredMapMarker() {
-        Cursor data = mDatabaseHelper.getMapCoordinates(userID);
-        while (data.moveToNext()) {
-            newMapMarker(data.getDouble(1), data.getDouble(2));
-        }
-    }
-
-    private void displayStoredMapMarkerAllUser() {
-        Cursor data = mDatabaseHelper.getMapCoordinatesAllUser(userID);
-        if (data == null || data.getCount() < 1) {
-            Toast.makeText(getContext(), R.string.no_entries_different_users, Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                while (data.moveToNext()) {
-                    newMapMarkerDiffUser(data.getDouble(1), data.getDouble(2), data.getString(4));
-                }
-            } finally {
-                data.close();
-            }
-        }
-    }
 
     private void markNewLocation() {
         Button getGeoLocal = (Button) mView.findViewById(R.id.map_get_geo_local);
@@ -277,8 +260,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
 
-
-
             @Override
             public void onLocationChanged(Location location) {
                 double lang = location.getLatitude();
@@ -322,6 +303,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 6000, 200, locationListener);
     }
+
 
 
     @Override
@@ -415,7 +397,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         active = true;
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-
         }
     }
 
@@ -434,4 +415,52 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     //Required Interface
     public interface OnFragmentInteractionListener {
     }
+
+
+    private class MarkerAsyncTask extends android.os.AsyncTask<Void,Void,Void>{
+        Cursor data;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            data = mDatabaseHelper.getMapCoordinates(userID);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            while (data.moveToNext()) {
+                newMapMarker(data.getDouble(1), data.getDouble(2));
+            }
+        }
+    }
+
+    private class MarkerAsyncTaskAllUsers extends AsyncTask<Void,Void,Void>{
+        Cursor data;
+        @Override
+        protected Void doInBackground(Void... voids) {
+            data = mDatabaseHelper.getMapCoordinatesAllUser(userID);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (data == null || data.getCount() < 1) {
+                Toast.makeText(getContext(), R.string.no_entries_different_users, Toast.LENGTH_SHORT).show();
+            } else {
+                try {
+                    while (data.moveToNext()) {
+                        newMapMarkerDiffUser(data.getDouble(1), data.getDouble(2), data.getString(4));
+                    }
+                } finally {
+                    data.close();
+                }
+            }
+        }
+    }
+
+
+
 }

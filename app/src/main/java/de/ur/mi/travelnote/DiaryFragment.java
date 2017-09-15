@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -28,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -87,7 +89,9 @@ public class DiaryFragment extends Fragment {
         getUserInfo();
         mTextView = (TextView) view.findViewById(R.id.diary_empty_text);
         mListView = (ListView) view.findViewById(R.id.diary_list_view);
-        populateListView();
+        //populateListView();
+
+        new DisplayEntriesAsyncTask().execute();
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             Button newEntry = (Button) view.findViewById(R.id.new_Entry_Button);
@@ -135,24 +139,7 @@ public class DiaryFragment extends Fragment {
     }
 
 
-    private void populateListView(){
-        cursor = mDatabaseHelper.getDiaryEntriesCurrentUser(userID);
-        listData = new ArrayList<>();
-        if (cursor == null || cursor.getCount() < 1) {
-            mTextView.setText("Keine Einträge vorhanden!");
-        } else {
-            try {
-                while (cursor.moveToNext()){
-                    listData.add(cursor.getString(1));
-                }
-            } catch (CursorIndexOutOfBoundsException e){
-                //...
-            }
-        }
 
-        adapter = new DiaryCursorAdapter(getContext(), cursor);
-        mListView.setAdapter(adapter);
-    }
 
 
 
@@ -244,21 +231,11 @@ public class DiaryFragment extends Fragment {
     }
 
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.d(TAG, "onSaveInstanceState: ");
-    }
 
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        Log.d(TAG, "onViewStateRestored: ");
-    }
+
 
     @Override
     public void onResume() {
-        Log.d(TAG, "onResume: ..");
         super.onResume();
         if(!fragmentStatus){
             fragmentStatus = true;
@@ -392,5 +369,54 @@ public class DiaryFragment extends Fragment {
             userID = user.getUid();
             userName = user.getDisplayName();
         }
+    }
+
+    private class DisplayEntriesAsyncTask extends AsyncTask<Void,Void,Void>{
+
+        Cursor data;
+        ProgressBar progressBar = new ProgressBar(getActivity());
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            data = mDatabaseHelper.getDiaryEntriesCurrentUser(userID);
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            listData = new ArrayList<>();
+            if (data == null || data.getCount() < 1) {
+                mTextView.setText("Keine Einträge vorhanden!");
+            } else {
+                try {
+                    while (data.moveToNext()){
+                        listData.add(data.getString(1));
+                    }
+                } catch (CursorIndexOutOfBoundsException e){
+                    //...
+                }
+            }
+
+            adapter = new DiaryCursorAdapter(getContext(), data);
+            mListView.setAdapter(adapter);
+        }
+
+
+
+
+
     }
 }
