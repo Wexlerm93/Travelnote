@@ -82,6 +82,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
     }
 
     @Override
@@ -126,6 +128,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
         if(googleMap.getMapType() != GoogleMap.MAP_TYPE_NORMAL){
@@ -180,12 +183,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (!location.equals("")) {
             try {
                 List<Address> list = geocoder.getFromLocationName(location, 1);
-                Address address = list.get(0);
-                double lat = address.getLatitude();
-                double lng = address.getLongitude();
-                newMapMarker(lat, lng);
-                addCoordinatesToDB(lat, lng, userID, userName);
-                goToLocationZoom(lat, lng, DEFAULT_ZOOM);
+
+
+                if(list.size() > 0){
+                    Address address = list.get(0);
+                    double lat = address.getLatitude();
+                    double lng = address.getLongitude();
+                    newMapMarker(lat, lng);
+                    addCoordinatesToDB(lat, lng, userID, userName);
+                    goToLocationZoom(lat, lng, DEFAULT_ZOOM);
+                }else {
+                    double BIASED_LAT = -66.666666;
+                    double BIASED_LNG = -145.678901;
+                    Toast.makeText(getActivity(), "BLUB", Toast.LENGTH_SHORT).show();
+                }
+
+
             } catch (IOException e) {
                 e.printStackTrace();
                 displayShortToast(R.string.map_entry_failed);
@@ -218,8 +231,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void newMapMarker(double latitude, double longitude) {
         LatLng latlng = new LatLng(latitude, longitude);
-        String string = String.format(Locale.GERMAN,"%.6f", latitude) ;
-        MarkerOptions options = new MarkerOptions().title(string).position(latlng);
+        MarkerOptions options = new MarkerOptions().position(latlng);
         mGoogleMap.addMarker(options);
     }
 

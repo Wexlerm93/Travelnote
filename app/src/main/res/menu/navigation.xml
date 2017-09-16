@@ -21,7 +21,7 @@
         android:title="@string/menu_title_map" />
     <item
         android:id="@+id/navigation_settings"
-        android:icon="@drawable/ic_settings_black_24dp"
-        android:title="@string/menu_title_settings" />
+        android:icon="@drawable/ic_account_box_black_24dp"
+        android:title="@string/menu_title_profile" />
 
 </menu>

@@ -29,6 +29,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener{
 
+    String userName;
+
     public SettingsFragment() {
         // Required empty public constructor
     }
@@ -51,14 +53,27 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String userName = user.getDisplayName();
+        if(user!=null){
+            userName = user.getDisplayName();
+        }
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         TextView helloText = (TextView) view.findViewById(R.id.user_name_text);
         helloText.setText(getString(R.string.hello_settings_text) + ", " + userName + "." );
-        Button logout = (Button) view.findViewById(R.id.logout_button);
-        logout.setOnClickListener(this);
+
+        Button locationListButton = (Button) view.findViewById(R.id.show_location_button);
+        locationListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ShowLocationListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button logoutButton = (Button) view.findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(this);
         return view;
     }
 

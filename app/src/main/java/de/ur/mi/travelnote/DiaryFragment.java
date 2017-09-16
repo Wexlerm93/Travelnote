@@ -9,14 +9,13 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -36,7 +34,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 
 import de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper.DatabaseHelper;
@@ -76,6 +74,8 @@ public class DiaryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+
     }
 
     @Override
@@ -90,6 +90,16 @@ public class DiaryFragment extends Fragment {
         mTextView = (TextView) view.findViewById(R.id.diary_empty_text);
         mListView = (ListView) view.findViewById(R.id.diary_list_view);
         //populateListView();
+
+
+
+
+
+
+
+
+
+
 
         new DisplayEntriesAsyncTask().execute();
 
@@ -117,6 +127,8 @@ public class DiaryFragment extends Fragment {
 
 
 
+
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -128,8 +140,12 @@ public class DiaryFragment extends Fragment {
 
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                showDeleteSingleEntryDialog(l);
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                //Here I want to delete the selected entry..
+                //both position and id are returning the same value:
+                // when there are three items in the list, the position would be three for all values,
+                // while the id would be the value of the latest entry.
+                showDeleteSingleEntryDialog(id);
                 return true;
             }
         });
@@ -409,14 +425,8 @@ public class DiaryFragment extends Fragment {
                     //...
                 }
             }
-
             adapter = new DiaryCursorAdapter(getContext(), data);
             mListView.setAdapter(adapter);
         }
-
-
-
-
-
     }
 }

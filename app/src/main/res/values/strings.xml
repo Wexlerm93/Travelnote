@@ -20,7 +20,7 @@
     <string name="menu_title_home">Home</string>
     <string name="menu_title_diary">Tagebuch</string>
     <string name="menu_title_map">Karte</string>
-    <string name="menu_title_settings">Einstellungen</string>
+    <string name="menu_title_profile">Profil</string>
     <string name="delete_db_diary_entries_warning_title">Tagebucheinträge löschen</string>
     <string name="delete_db_diary_entries_warning_long">Willst Du wirklich alle Tagebucheinträge unwiderruflich löschen? \nOrte werden auch gelöscht!</string>
     <string name="delete_db_single_diary_entry_warning_title">Tagebucheintrag löschen</string>

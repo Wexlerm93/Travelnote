@@ -1,6 +1,5 @@
 package de.ur.mi.travelnote;
 
-
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
@@ -13,7 +12,6 @@ public class DiaryCursorAdapter extends CursorAdapter {
 
     Context context;
     private long ident;
-
 
     public DiaryCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);

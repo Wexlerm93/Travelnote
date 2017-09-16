@@ -93,6 +93,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return sqLiteDatabase.rawQuery(query, null);
     }
 
+    public void clearLocationEntryCurrentUser(String userID, long ident){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        String clearDBEntryQuery = "DELETE FROM " + TABLE_MAP_COORDINATES + " WHERE(( " + USER_ID + "= '" + userID + "') AND (_id = " + ident +"))";
+        sqLiteDatabase.execSQL(clearDBEntryQuery);
+    }
+
     public void clearTableMapCoordinatesCurrentUser(String userID) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         String clearDBQuery = "DELETE FROM " + TABLE_MAP_COORDINATES + " WHERE " + USER_ID + "= '" + userID + "'";
