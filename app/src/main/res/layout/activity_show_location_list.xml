@@ -4,19 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.ur.mi.travelnote.ShowLocationListActivity"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    tools:context="de.ur.mi.travelnote.ShowLocationListActivity">
 
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/basic_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="@style/Theme.BasicTravelnote.Light.NoActionBar"
-            app:titleTextColor="@color/white"/>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/basic_toolbar"
+        android:theme="@style/Theme.BasicTravelnote.Light.NoActionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:titleTextColor="@color/white" />
 
+    <TextView
+        android:id="@+id/location_empty_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textColor="@color/travelnote_blue"
+        android:textSize="21sp"
+        android:padding="10dp"/>
 
     <ListView
         android:id="@+id/location_list_view"
@@ -24,14 +33,5 @@
         android:layout_height="match_parent">
 
     </ListView>
-
-    <TextView
-        android:id="@+id/location_empty_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:layout_gravity="center_horizontal"/>
-
-
 
 </LinearLayout>

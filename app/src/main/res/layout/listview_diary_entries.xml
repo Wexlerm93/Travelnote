@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="16sp"
-            android:textColor="@color/travelnote_blue"
+            android:textColor="@color/travelnote_red"
             android:paddingTop="@dimen/diary_list_view_padding_default"
             android:paddingBottom="@dimen/diary_list_view_padding_small"
             android:paddingLeft="@dimen/diary_list_view_padding_end"
@@ -28,6 +28,7 @@
             android:paddingTop="@dimen/diary_list_view_padding_default"
             android:paddingBottom="@dimen/diary_list_view_padding_small"
             android:textAlignment="center"
+            android:textColor="@color/travelnote_blue_light"
             android:layout_weight="1"
             android:textSize="16sp" />
         <TextView
@@ -37,6 +38,7 @@
             android:layout_weight="1"
             android:layout_gravity="end"
             android:textAlignment="viewEnd"
+            android:textColor="@color/travelnote_blue_light"
             android:textSize="16sp"
             android:paddingTop="@dimen/diary_list_view_padding_default"
             android:paddingBottom="@dimen/diary_list_view_padding_small"
@@ -52,6 +54,7 @@
             android:id="@+id/listitem_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/travelnote_blue"
             android:paddingTop="@dimen/diary_list_view_padding_small"
             android:paddingBottom="@dimen/diary_list_view_padding_default"
             android:paddingLeft="@dimen/diary_list_view_padding_end"

@@ -24,10 +24,12 @@
     <string name="delete_db_diary_entries_warning_title">Tagebucheinträge löschen</string>
     <string name="delete_db_diary_entries_warning_long">Willst Du wirklich alle Tagebucheinträge unwiderruflich löschen? \nOrte werden auch gelöscht!</string>
     <string name="delete_db_single_diary_entry_warning_title">Tagebucheintrag löschen</string>
-    <string name="delete_db_single_diary_entry_warning_long">Willst Du wirklich diesen Tagebucheintrag dauerhaft löschen?\nDer Ort wird nicht gelöscht.</string>
+    <string name="delete_db_single_diary_entry_warning_long">Willst Du diesen Tagebucheintrag wirklich dauerhaft löschen?\nDer Ort wird nicht gelöscht.</string>
     <string name="delete_db_map_entries_warning_title">Standorteinträge löschen</string>
     <string name="delete_db_map_entries_warning_long">Willst Du wirklich alle Standorteinträge unwiderruflich löschen?</string>
-    <string name="share_diary_entry_text">Versende Deinen ausgewählten Tagebucheintrag mit Deiner Lieblingsapp.</string>
+    <string name="delete_single_location_entry_warning_title">Standort löschen</string>
+    <string name="delete_single_location_entry_warning_long">Willst Du diesen Standort wirklich dauerhaft löschen?.</string>
+    <string name="share_diary_entry_text">Versende den ausgewählten Tagebucheintrag mit Deiner Lieblingsapp.</string>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -73,6 +75,12 @@
     <string name="diary_entry_button_text">Jetzt eintragen!</string>
     <string name="failed_saving_entry">Eintrag konnte nicht gespeichert werden!</string>
     <string name="entry_successful_toast">Eintrag erfolgreich gespeichert</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="opening_text_share_mail">Hey, anbei findest du meine Travelnotes. Viel Spaß damit!</string>
+    <string name="subject_text_share_mail">Reisetagebuch von</string>
+    <string name="intent_text_share_diary_mail">Versende Tagebucheinträge..</string>
+    <string name="no_diary_entries_text">Keine Einträge vorhanden!\nStarte jetzt mit einem neuen Eintrag.</string>
 
 
 </resources>

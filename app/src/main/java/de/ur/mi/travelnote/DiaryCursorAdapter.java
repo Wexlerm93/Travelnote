@@ -11,7 +11,6 @@ import android.widget.TextView;
 public class DiaryCursorAdapter extends CursorAdapter {
 
     Context context;
-    private long ident;
 
     public DiaryCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
@@ -20,7 +19,6 @@ public class DiaryCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        ident = cursor.getLong(0);
         TextView title = (TextView) view.findViewById(R.id.listitem_title);
         title.setText(cursor.getString(1));
         TextView location = (TextView) view.findViewById(R.id.listitem_location);
@@ -34,11 +32,7 @@ public class DiaryCursorAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         return layoutInflater.inflate(R.layout.listview_diary_entries, parent, false);
-        //return view;
     }
 
-    @Override
-    public long getItemId(int position) {
-        return ident;
-    }
+
 }

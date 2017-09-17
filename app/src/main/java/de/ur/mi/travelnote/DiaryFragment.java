@@ -9,12 +9,10 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,25 +23,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-
 import java.util.ArrayList;
-
 import de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper.DatabaseHelper;
 
 
 public class DiaryFragment extends Fragment {
-
-    private static final String TAG = "FragmentTest";
-
 
     private final int ORIGIN = 0;
     String userID;
@@ -57,77 +46,29 @@ public class DiaryFragment extends Fragment {
     private TextView mTextView;
     private ListView mListView;
     ArrayList<String> listData;
-    Cursor cursor;
 
     public DiaryFragment() {
         // Required empty public constructor
-    }
-
-    public static DiaryFragment newInstance() {
-        DiaryFragment fragment = new DiaryFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "OnCreateView");
         fragmentStatus = true;
         // Inflate the layout for this fragment
         View view =inflater.inflate(R.layout.fragment_diary, container, false);
         mDatabaseHelper = new DatabaseHelper(getContext());
         getUserInfo();
-        mTextView = (TextView) view.findViewById(R.id.diary_empty_text);
-        mListView = (ListView) view.findViewById(R.id.diary_list_view);
-        //populateListView();
 
-
-
-
-
-
-
-
-
-
+        initUIElements(view);
 
         new DisplayEntriesAsyncTask().execute();
-
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            Button newEntry = (Button) view.findViewById(R.id.new_Entry_Button);
-            newEntry.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getContext(), NewDiaryEntryActivity.class);
-                    startActivity(intent);
-                }
-            });
-        }else {
-            FloatingActionButton newEntryFloat = (FloatingActionButton) view.findViewById(R.id.new_Entry_Button_Float);
-            newEntryFloat.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getContext(), NewDiaryEntryActivity.class);
-                    startActivity(intent);
-                }
-            });
-        }
-
-
-
-
-
-
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -154,9 +95,31 @@ public class DiaryFragment extends Fragment {
         return view;
     }
 
+    private void initUIElements(View view){
+        mTextView = (TextView) view.findViewById(R.id.diary_empty_text);
+        mTextView.setVisibility(View.GONE);
+        mListView = (ListView) view.findViewById(R.id.diary_list_view);
 
-
-
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            Button newEntry = (Button) view.findViewById(R.id.new_Entry_Button);
+            newEntry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getContext(), NewDiaryEntryActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }else {
+            FloatingActionButton newEntryFloat = (FloatingActionButton) view.findViewById(R.id.new_Entry_Button_Float);
+            newEntryFloat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getContext(), NewDiaryEntryActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+    }
 
 
     private void showDeleteSingleEntryDialog(long i) {
@@ -169,7 +132,7 @@ public class DiaryFragment extends Fragment {
         alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
 
         //if user still clicks yes, then delete db entries
-        alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 mDatabaseHelper.clearDiaryEntryCurrentUser(userID, helper);
                 refreshFragment();
@@ -177,7 +140,7 @@ public class DiaryFragment extends Fragment {
         });
 
         //if user cancels, do nothing
-        alertDialog.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing here.
             }
@@ -194,7 +157,7 @@ public class DiaryFragment extends Fragment {
         alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
 
         //if user still clicks yes, then delete db entries
-        alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 boolean stmt = mDatabaseHelper.clearTableDiaryEntriesCurrentUser(userID, ORIGIN);
                 if(stmt){
@@ -208,7 +171,7 @@ public class DiaryFragment extends Fragment {
         });
 
         //if user cancels, do nothing
-        alertDialog.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing here.
             }
@@ -245,10 +208,7 @@ public class DiaryFragment extends Fragment {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content, new DiaryFragment()).commit();
     }
-
-
-
-
+    
 
     @Override
     public void onResume() {
@@ -347,9 +307,9 @@ public class DiaryFragment extends Fragment {
 
         intent = new Intent(Intent.ACTION_SEND);
         intent.setData(Uri.parse("mailto:"));
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Reisetagebuch von " + userName);
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_text_share_mail) + userName);
         StringBuilder sb = new StringBuilder();
-        String openingText = "Hey, anbei findest du meine Travelnotes. Viel Spaß damit!" + "\n" + "\n";
+        String openingText = getString(R.string.opening_text_share_mail) + "\n" + "\n";
         sb.append(openingText);
         Cursor data = mDatabaseHelper.getDiaryEntriesCurrentUser(userID);
         int entryCounter = 1;
@@ -370,7 +330,7 @@ public class DiaryFragment extends Fragment {
 
         intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
         intent.setType("message/rfc822");
-        chooser = Intent.createChooser(intent, "Versende Tagebucheinträge..");
+        chooser = Intent.createChooser(intent, getString(R.string.intent_text_share_diary_mail));
         startActivity(chooser);
     }
 
@@ -388,9 +348,7 @@ public class DiaryFragment extends Fragment {
     }
 
     private class DisplayEntriesAsyncTask extends AsyncTask<Void,Void,Void>{
-
         Cursor data;
-        ProgressBar progressBar = new ProgressBar(getActivity());
 
         @Override
         protected void onPreExecute() {
@@ -403,11 +361,6 @@ public class DiaryFragment extends Fragment {
             return null;
         }
 
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-
-        }
 
         @Override
         protected void onPostExecute(Void aVoid) {
@@ -415,14 +368,18 @@ public class DiaryFragment extends Fragment {
 
             listData = new ArrayList<>();
             if (data == null || data.getCount() < 1) {
-                mTextView.setText("Keine Einträge vorhanden!");
+                if(getView() != null){
+                    mTextView.setVisibility(View.VISIBLE);
+                    mTextView.setText(R.string.no_diary_entries_text);
+                }
+
             } else {
                 try {
                     while (data.moveToNext()){
                         listData.add(data.getString(1));
                     }
                 } catch (CursorIndexOutOfBoundsException e){
-                    //...
+                    e.printStackTrace();
                 }
             }
             adapter = new DiaryCursorAdapter(getContext(), data);

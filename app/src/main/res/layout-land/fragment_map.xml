@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     tools:context="de.ur.mi.travelnote.MapFragment"
     android:orientation="vertical"
-    android:weightSum="3">
+    android:weightSum="3"
+    android:id="@+id/map_fragment">
 
 
     <LinearLayout

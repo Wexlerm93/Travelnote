@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
@@ -24,9 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.media.VolumeProviderCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
@@ -49,9 +47,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 import de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper.DatabaseHelper;
 
@@ -72,7 +70,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private LocationManager locationManager;
     private LocationListener locationListener;
     DatabaseHelper mDatabaseHelper;
-
 
 
     public MapFragment() {
@@ -125,13 +122,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
-        if(googleMap.getMapType() != GoogleMap.MAP_TYPE_NORMAL){
+        if (googleMap.getMapType() != GoogleMap.MAP_TYPE_NORMAL) {
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         }
         goToLocationZoom(LAT_EU, LNG_EU, DEFAULT_ZOOM);
@@ -163,7 +159,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-
     private void markNewLocation() {
         Button getGeoLocal = (Button) mView.findViewById(R.id.map_get_geo_local);
         getGeoLocal.setOnClickListener(new View.OnClickListener() {
@@ -183,22 +178,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (!location.equals("")) {
             try {
                 List<Address> list = geocoder.getFromLocationName(location, 1);
-
-
-                if(list.size() > 0){
+                if (list.size() > 0) {
                     Address address = list.get(0);
                     double lat = address.getLatitude();
                     double lng = address.getLongitude();
                     newMapMarker(lat, lng);
                     addCoordinatesToDB(lat, lng, userID, userName);
                     goToLocationZoom(lat, lng, DEFAULT_ZOOM);
-                }else {
+                } else {
                     double BIASED_LAT = -66.666666;
                     double BIASED_LNG = -145.678901;
-                    Toast.makeText(getActivity(), "BLUB", Toast.LENGTH_SHORT).show();
                 }
-
-
             } catch (IOException e) {
                 e.printStackTrace();
                 displayShortToast(R.string.map_entry_failed);
@@ -249,7 +239,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-
     /*
             Method to check wether Google Services are available or not.. Google Services are needed to access Google APIs
          */
@@ -278,7 +267,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 double lng = location.getLongitude();
                 newMapMarker(lang, lng);
                 addCoordinatesToDB(lang, lng, userID, userName);
-                if(active){
+                //Display Toast only when Fragment is visible to user, to avoid NullPointerException
+                if (active) {
                     displayShortToast(R.string.current_location_marked_success);
                 }
             }
@@ -296,7 +286,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onProviderDisabled(String s) {
                 //check first if Fragment is active, to avoid crashes
-                if (active){
+                if (active) {
                     enableLocationProviderDialog();
                 }
 
@@ -317,7 +307,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -333,13 +322,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void enableLocationProviderDialog() {
+        //build alert dialog, if location provider is disabled
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
         alertDialog.setTitle("Standortfreigabe");
-        alertDialog.setMessage("Du musst Deinen Stanort freigeben, damit Travelnote Deinen Standort markieren kann.");
+        alertDialog.setMessage("Du musst Deinen Netzwerk-Standort freigeben, damit Travelnote Deinen Standort markieren kann.");
         alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
 
-        //if user still clicks yes, then delete db entries
-        alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+        //if user wants to enable location provider, start intent to device settings..
+        alertDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
@@ -347,7 +337,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         //if user cancels, do nothing
-        alertDialog.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing here.
             }
@@ -364,14 +354,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
 
         //if user still clicks yes, then delete db entries
-        alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 deleteCoordinateEntries();
             }
         });
 
         //if user cancels, do nothing
-        alertDialog.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing here.
 
@@ -392,15 +382,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     //Sets user info provided through Firebase, according to currently logged-in user
-    private void getUserInfo(){
+    private void getUserInfo() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             userID = user.getUid();
             userName = user.getDisplayName();
         }
     }
-
-
 
 
     @Override
@@ -429,50 +417,49 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-    private class MarkerAsyncTask extends android.os.AsyncTask<Void,Void,Void>{
-        Cursor data;
+    private class MarkerAsyncTask extends android.os.AsyncTask<Void, Void, Void> {
+        Cursor mapCoordinatesCursor;
 
         @Override
         protected Void doInBackground(Void... voids) {
-            data = mDatabaseHelper.getMapCoordinates(userID);
-
+            mapCoordinatesCursor = mDatabaseHelper.getMapCoordinates(userID);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            while (data.moveToNext()) {
-                newMapMarker(data.getDouble(1), data.getDouble(2));
+            while (mapCoordinatesCursor.moveToNext()) {
+                newMapMarker(mapCoordinatesCursor.getDouble(1), mapCoordinatesCursor.getDouble(2));
             }
         }
     }
 
-    private class MarkerAsyncTaskAllUsers extends AsyncTask<Void,Void,Void>{
-        Cursor data;
+    private class MarkerAsyncTaskAllUsers extends AsyncTask<Void, Void, Void> {
+        Cursor mapCoordinatesAllUserCursor;
+
         @Override
         protected Void doInBackground(Void... voids) {
-            data = mDatabaseHelper.getMapCoordinatesAllUser(userID);
+            mapCoordinatesAllUserCursor = mDatabaseHelper.getMapCoordinatesAllUser(userID);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (data == null || data.getCount() < 1) {
+            if (mapCoordinatesAllUserCursor == null || mapCoordinatesAllUserCursor.getCount() < 1) {
                 Toast.makeText(getContext(), R.string.no_entries_different_users, Toast.LENGTH_SHORT).show();
             } else {
                 try {
-                    while (data.moveToNext()) {
-                        newMapMarkerDiffUser(data.getDouble(1), data.getDouble(2), data.getString(4));
+                    while (mapCoordinatesAllUserCursor.moveToNext()) {
+                        newMapMarkerDiffUser(mapCoordinatesAllUserCursor.getDouble(1), mapCoordinatesAllUserCursor.getDouble(2), mapCoordinatesAllUserCursor.getString(4));
                     }
                 } finally {
-                    data.close();
+                    mapCoordinatesAllUserCursor.close();
                 }
             }
         }
     }
-
 
 
 }

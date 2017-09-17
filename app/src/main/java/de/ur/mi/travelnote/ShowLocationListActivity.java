@@ -47,29 +47,17 @@ public class ShowLocationListActivity extends AppCompatActivity {
         if(getSupportActionBar()!= null){
             getSupportActionBar().setTitle("Deine Standorte");
         }
-
         getUserInfo();
         mDatabaseHelper = new DatabaseHelper(getApplicationContext());
         mTextView = (TextView) findViewById(R.id.location_empty_text);
         mListView = (ListView) findViewById(R.id.location_list_view);
 
-
         new DisplayLocationEntriesAsyncTask().execute();
-
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(ShowLocationListActivity.this, "Dies ist: " + l, Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        mTextView.setVisibility(View.GONE);
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Toast.makeText(ShowLocationListActivity.this, "This is: " + l + "(" + userID + ")", Toast.LENGTH_SHORT).show();
-                //showDeleteSingleEntryDialog(l);
-
-                Toast.makeText(ShowLocationListActivity.this, "Das ist: " + l, Toast.LENGTH_SHORT).show();
+                showDeleteSingleEntryDialog(l);
                 return true;
             }
         });
@@ -109,12 +97,12 @@ public class ShowLocationListActivity extends AppCompatActivity {
         final int helper = (int) deleteID;
         //if there are db entries build alert dialog to avoid deletion by accident
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setTitle(R.string.delete_db_single_diary_entry_warning_title);
-        alertDialog.setMessage(R.string.delete_db_single_diary_entry_warning_long);
+        alertDialog.setTitle(R.string.delete_single_location_entry_warning_title);
+        alertDialog.setMessage(R.string.delete_single_location_entry_warning_long);
         alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
 
         //if user still clicks yes, then delete db entries
-        alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 mDatabaseHelper.clearLocationEntryCurrentUser(userID, helper);
                 new DisplayLocationEntriesAsyncTask().execute();
@@ -123,7 +111,7 @@ public class ShowLocationListActivity extends AppCompatActivity {
         });
 
         //if user cancels, do nothing
-        alertDialog.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing here.
             }
@@ -163,6 +151,9 @@ public class ShowLocationListActivity extends AppCompatActivity {
 
             listData = new ArrayList<>();
             if (data == null || data.getCount() < 1) {
+
+
+                mTextView.setVisibility(View.VISIBLE);
                 mTextView.setText("Keine Einträge vorhanden!");
             } else {
                 try {
