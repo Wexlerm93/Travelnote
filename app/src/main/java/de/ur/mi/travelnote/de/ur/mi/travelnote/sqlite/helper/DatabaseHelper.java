@@ -7,8 +7,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteAbortException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.util.Base64;
 
-import org.w3c.dom.Text;
+import java.io.ByteArrayOutputStream;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 
@@ -17,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     private static final String TABLE_MAP_COORDINATES = "map_marker";
     private static final String TABLE_DIARY_ENTRIES = "diary_entries_table";
+    private static final String TABLE_GALLERY_BITMAPS = "gallery_table";
 
     // Related to all Tables
     private static final String USER_ID = "user_id";
@@ -42,6 +45,10 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             "CREATE TABLE " + TABLE_DIARY_ENTRIES + " ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + DIARY_ENTRY_TITLE + " STRING, " + DIARY_ENTRY_CONTENT + " STRING, " + DIARY_ENTRY_LOC_TEXT + " STRING, "
                     + DIARY_ENTRY_DATE + " DATE," + USER_ID + " STRING, " + USER_NAME + " STRING)";
 
+    //Related to Gallery Table
+    private static final String GALLERY_IMAGES = "image";
+    private static final String CREATE_TABLE_GALLERY = "CREATE TABLE " + TABLE_GALLERY_BITMAPS
+            + " ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + GALLERY_IMAGES + " STRING)";
 
 
 
@@ -53,12 +60,14 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_TABLE_MAP_MARKER);
         sqLiteDatabase.execSQL(CREATE_TABLE_DIARY_CONTENT);
+        sqLiteDatabase.execSQL(CREATE_TABLE_GALLERY);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_MAP_COORDINATES);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_DIARY_ENTRIES);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + TABLE_GALLERY_BITMAPS);
         onCreate(sqLiteDatabase);
     }
 
@@ -79,7 +88,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             return true;
         }
     }
-
 
     public Cursor getMapCoordinates(String userID){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -129,6 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return sqLiteDatabase.rawQuery(query, null);
     }
 
+
     public boolean clearTableDiaryEntriesCurrentUser(String userID, int originNo) {
         boolean result;
         try {
@@ -165,6 +174,31 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         String query = "SELECT * FROM " + TABLE_DIARY_ENTRIES + " WHERE _id = " + id;
         return sqLiteDatabase.rawQuery(query, null);
     }
+
+    public boolean addImage(Bitmap image) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(GALLERY_IMAGES, bitmapToString(image));
+
+        long result = sqLiteDatabase.insert(TABLE_GALLERY_BITMAPS, null, contentValues);
+
+        return (result > -1);
+    }
+
+    public Cursor getImagesCurrentUser(String userID) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_GALLERY_BITMAPS + " WHERE " + USER_ID + " = '" + userID + "'";
+        return sqLiteDatabase.rawQuery(query, null);
+    }
+
+
+
+    public final static String bitmapToString(Bitmap in){
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        in.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+        return Base64.encodeToString(bytes.toByteArray(),Base64.DEFAULT);
+    }
+
 
 
 

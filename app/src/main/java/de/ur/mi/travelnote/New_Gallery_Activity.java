@@ -16,8 +16,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper.DatabaseHelper;
 
 /**
  * Created by wexle on 09.09.2017.
@@ -29,11 +34,31 @@ public class New_Gallery_Activity extends AppCompatActivity{
     String imageEncode;
     List<String> imagesEncodedList;
 
+    private DatabaseHelper mDatabaseHelper;
+    private String userID;
+    private String userName;
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_gallery_layout);
         setupUi();
 
+        mDatabaseHelper = new DatabaseHelper(this);
+        getUserInfo();
+
+    }
+
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    private void getUserInfo(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            userID = user.getUid();
+            userName = user.getDisplayName();
+        }
     }
 
     private void setupUi() {
@@ -78,6 +103,13 @@ public class New_Gallery_Activity extends AppCompatActivity{
                     cursor.close();
                     Picture(MediaStore.Images.Media.getBitmap(this.getContentResolver(), mImageUri));
                     setText(1);
+                    boolean insert = mDatabaseHelper.addImage(MediaStore.Images.Media.getBitmap(this.getContentResolver(), mImageUri));
+                    if(insert){
+                        displayShortToast(R.string.entry_successful_toast);
+
+                    }else{
+                        displayShortToast(R.string.failed_saving_entry);
+                    }
                 } else {
                     if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();
@@ -97,10 +129,10 @@ public class New_Gallery_Activity extends AppCompatActivity{
                             imageEncode = cursor.getString(columnIndex);
                             imagesEncodedList.add(imageEncode);
                             cursor.close();
+                            boolean insert = mDatabaseHelper.addImage(MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri));
                         }
                         setText(mClipData.getItemCount());
                         Picture(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myArrayUri.get(1)));
-
                     }
                 }
             } else {
@@ -121,5 +153,9 @@ public class New_Gallery_Activity extends AppCompatActivity{
     public void Picture(Bitmap picture) {
         ImageView newPicture = (ImageView) findViewById(R.id.test_picture);
         newPicture.setImageBitmap(picture);
+    }
+
+    private void displayShortToast(int id) {
+        Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
     }
 }
