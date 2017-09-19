@@ -39,6 +39,10 @@
     <string name="menu_title_gallery">Galerie</string>
     <string name="send_per_mail">Tagebucheinträge per Mail senden</string>
 
+    <string name="gallery_string">Urlaubsalbum</string>
+    <string name="gallery_headline">Erstelle dein Album oder füge Bilder zu deinem bestehenden Album hinzu.</string>
+    <string name="choose_pics_btn">Wähle deine Bilder</string>
+    <string name="add_pics_btn">Füge Bilder zu Album hinzu</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

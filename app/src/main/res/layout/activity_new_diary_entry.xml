@@ -61,4 +61,5 @@
         android:background="@color/travelnote_red"
         android:text="@string/diary_entry_button_text"
         android:textColor="@color/white" />
+
 </LinearLayout>

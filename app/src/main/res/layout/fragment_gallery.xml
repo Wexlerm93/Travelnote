@@ -1,13 +1,27 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.ur.mi.travelnote.GalleryFragment">
+    tools:context="de.ur.mi.travelnote.GalleryFragment"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
+
     <TextView
+        android:id="@+id/album_name"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="@string/gallery_string"
+        android:textSize="24dp"
+        android:textStyle="bold" />
 
-</FrameLayout>
+    <ListView
+        android:id="@+id/gallery_list_view"
+        android:layout_weight="0.6"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+
+
+
+</LinearLayout>

@@ -1,4 +1,4 @@
-package de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper;
+package de.ur.mi.travelnote;
 
 import android.content.ContentValues;
 import android.content.Context;
