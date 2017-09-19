@@ -55,6 +55,7 @@ import de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper.DatabaseHelper;
 
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
+
     private OnFragmentInteractionListener mListener;
     final double LAT_EU = 53.0000;
     final double LNG_EU = 9.0000;

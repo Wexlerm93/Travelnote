@@ -175,6 +175,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return sqLiteDatabase.rawQuery(query, null);
     }
 
+
     public boolean addImage(Bitmap image) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -190,7 +191,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         String query = "SELECT * FROM " + TABLE_GALLERY_BITMAPS + " WHERE " + USER_ID + " = '" + userID + "'";
         return sqLiteDatabase.rawQuery(query, null);
     }
-
 
 
     public final static String bitmapToString(Bitmap in){

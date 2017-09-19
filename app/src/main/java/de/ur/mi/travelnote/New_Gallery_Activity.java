@@ -5,20 +5,22 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class New_Gallery_Activity extends AppCompatActivity{
     private static int RESULT_LOAD_IMAGE = 1;
     String imageEncode;
     List<String> imagesEncodedList;
+    ArrayList<Uri> myUriList;
 
     private DatabaseHelper mDatabaseHelper;
     private String userID;
@@ -42,11 +45,27 @@ public class New_Gallery_Activity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_gallery_layout);
+        Toolbar toolbar= (Toolbar) findViewById(R.id.basic_toolbar);
+        setSupportActionBar(toolbar);
         setupUi();
 
         mDatabaseHelper = new DatabaseHelper(this);
         getUserInfo();
+    }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.action_buttons_diary_entry_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_close_new_entry){
+            finish();
+            return true;
+        }else{
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     public void onBackPressed() {
@@ -63,8 +82,8 @@ public class New_Gallery_Activity extends AppCompatActivity{
 
     private void setupUi() {
 
-        Button addImage = (Button) findViewById(R.id.add_Pictures_Button);
-        addImage.setOnClickListener(new View.OnClickListener() {
+        Button chooseImage = (Button) findViewById(R.id.choose_Pictures_Button);
+        chooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent photoPickerIntent = new Intent();
@@ -75,11 +94,40 @@ public class New_Gallery_Activity extends AppCompatActivity{
             }
         });
 
+        final Button addImages = (Button) findViewById(R.id.add_pics_btn);
+        addImages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (myUriList.isEmpty()) {
+                    displayShortToast(R.string.failed_saving_entry);
+                } else {
+                    try {
+                        addImagesToDb(myUriList);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
     }
 
-    public final static Bitmap stringToBitmap(String in){
-        Bitmap myBitmap = BitmapFactory.decodeFile(in);
-        return myBitmap;
+    private void addImagesToDb(ArrayList<Uri> myUriList) throws IOException {
+        for (int i = 0; i < myUriList.size(); i++) {
+            boolean insert = mDatabaseHelper.addImage(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUriList.get(i)));
+            if(insert){
+                displayShortToast(R.string.entry_successful_toast);
+
+            }else{
+                displayShortToast(R.string.failed_saving_entry);
+            }
+        }
+
+    }
+
+
+    public void makeToast() {
+        Toast.makeText(this, "Kein Bild ausgewählt", Toast.LENGTH_LONG).show();
     }
 
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
@@ -88,36 +136,29 @@ public class New_Gallery_Activity extends AppCompatActivity{
             if (reqCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
                 imagesEncodedList = new ArrayList<String>();
+                myUriList = new ArrayList<Uri>();
                 if (data.getData() != null){
 
                     Uri mImageUri = data.getData();
+                    myUriList.add(mImageUri);
 
                     //Get the cursor
                     Cursor cursor = getContentResolver().query(mImageUri,
                             filePathColumn, null, null, null);
                     //Move to first row
                     cursor.moveToFirst();
-
+                    Picture(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUriList.get(0)));
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     imageEncode = cursor.getString(columnIndex);
                     cursor.close();
-                    Picture(MediaStore.Images.Media.getBitmap(this.getContentResolver(), mImageUri));
-                    setText(1);
-                    boolean insert = mDatabaseHelper.addImage(MediaStore.Images.Media.getBitmap(this.getContentResolver(), mImageUri));
-                    if(insert){
-                        displayShortToast(R.string.entry_successful_toast);
-
-                    }else{
-                        displayShortToast(R.string.failed_saving_entry);
-                    }
                 } else {
                     if (data.getClipData() != null) {
                         ClipData mClipData = data.getClipData();
-                        ArrayList<Uri> myArrayUri = new ArrayList<Uri>();
+                        myUriList = new ArrayList<Uri>();
                         for (int i = 0; i <mClipData.getItemCount(); i++) {
                             ClipData.Item item = mClipData.getItemAt(i);
                             Uri uri = item.getUri();
-                            myArrayUri.add(uri);
+                            myUriList.add(uri);
 
                             //Get the cursor
                             Cursor cursor = getContentResolver().query(uri,
@@ -129,25 +170,18 @@ public class New_Gallery_Activity extends AppCompatActivity{
                             imageEncode = cursor.getString(columnIndex);
                             imagesEncodedList.add(imageEncode);
                             cursor.close();
-                            boolean insert = mDatabaseHelper.addImage(MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri));
+                            Picture(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUriList.get(0)));
                         }
-                        setText(mClipData.getItemCount());
-                        Picture(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myArrayUri.get(1)));
                     }
                 }
             } else {
-                Toast.makeText(this, "Kein Bild ausgewählt", Toast.LENGTH_LONG).show();
+                makeToast();
             }
         } catch (Exception e) {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
         }
 
         super.onActivityResult(reqCode, resultCode, data);
-    }
-
-    public void setText(int count){
-        TextView numberOfPictures = (TextView) findViewById(R.id.count);
-        numberOfPictures.setText(String.valueOf(count));
     }
 
     public void Picture(Bitmap picture) {
