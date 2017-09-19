@@ -81,6 +81,12 @@
     <string name="subject_text_share_mail">Reisetagebuch von</string>
     <string name="intent_text_share_diary_mail">Versende Tagebucheinträge..</string>
     <string name="no_diary_entries_text">Keine Einträge vorhanden!\nStarte jetzt mit einem neuen Eintrag.</string>
+    <string name="location_determination_failed">Ihr eingegebener Ort konnte nicht gefunden werden.</string>
+    <string name="no_internet_text_title">Keine Internetverbindung.</string>
+    <string name="no_internet_text_explanation">Travelnote benötigt Internet, um Dich anzumelden. Bitte überprüfe Deine Internetverbindung und starte die App dann erneut.</string>
+    <string name="login_not_possible_text">Login nicht möglich.\\n Versuchen Sie es später erneut!</string>
+    <string name="show_saved_locations_text">Zeige gespeicherte Standorte</string>
+    <string name="logo_travelnote">Logo Travelnote</string>
 
 
 </resources>

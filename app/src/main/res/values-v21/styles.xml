@@ -11,4 +11,9 @@
         <item name="android:textColorPrimaryInverse">@color/white</item>
         <item name="android:colorForeground">@color/white</item>
     </style>
+
+    <style name="AppCompatTravelnote" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/travelnote_red</item>
+        <item name="android:statusBarColor">@color/travelnote_blue</item>
+    </style>
 </resources>

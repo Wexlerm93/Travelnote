@@ -1,11 +1,15 @@
 package de.ur.mi.travelnote;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
@@ -50,26 +54,26 @@ public class MainActivity extends AppCompatActivity {
                         .setTheme(R.style.LoginTheme).build(), RC_SIGN_IN);
             }
         }else{
+            //Set text view if there is no internet connection
             TextView noConnectionText = (TextView) findViewById(R.id.no_conn_text);
             TextView noConnectionTextDetail = (TextView) findViewById(R.id.no_conn_text_detail);
-            noConnectionText.setText("Keine Internetverbindung.");
-            noConnectionTextDetail.setText("Bitte überprüfe Deine Internetverbindung und starte die App erneut.");
+            noConnectionText.setText(R.string.no_internet_text_title);
+            noConnectionTextDetail.setText(R.string.no_internet_text_explanation);
         }
-
     }
-
 
     // now handle result from registration or log-in process
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //check if user is logged in
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_OK){
                 //user logged in
                 redirectToStart();
             }else{
                 // user not authenticated
-                Toast.makeText(this, "Login nicht möglich. \n Versuchen Sie es später erneut!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.login_not_possible_text, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -81,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    //check if user has internet connection
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -12,11 +12,8 @@ import android.view.MenuItem;
 
 public class StartActivity extends AppCompatActivity {
 
-
-    private final String TAG = "Test..";
-
     /*
-        Implemented onNavigationItemSelectedListener to handle bottom navigation bar actions, using anonymous class
+        Implemented onNavigationItemSelectedListener to handle bottom navigation bar actions
          fragmentManager replaces fragment classes inside framelayout "content"
      */
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -75,7 +72,5 @@ public class StartActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
     }
-
-
 }
 

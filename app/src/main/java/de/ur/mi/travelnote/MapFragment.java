@@ -32,6 +32,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -61,15 +63,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     final int DEFAULT_ZOOM = 3;
     final int ORIGIN_MAP = 1;
     private boolean active;
-    String userID;
-    String userName;
-    EditText editText;
-    GoogleMap mGoogleMap;
-    MapView mMapView;
-    View mView;
+    private String userID;
+    private String userName;
+    private GoogleMap mGoogleMap;
+    private MapView mMapView;
+    private View mView;
+    private EditText editText;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    DatabaseHelper mDatabaseHelper;
+    private DatabaseHelper mDatabaseHelper;
 
 
     public MapFragment() {
@@ -94,6 +96,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         setHasOptionsMenu(true);
         markNewLocation();
 
+        ImageView imageView = (ImageView) mView.findViewById(R.id.icon_locate_me);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addCurrentLocationFromButtonDialog();
+            }
+        });
+
         BottomNavigationView bottomNavView = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
         bottomNavView.getMenu().findItem(R.id.navigation_map).setChecked(true);
         return mView;
@@ -107,7 +117,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-    // Initialize Google Map, if Google Services are available
+    // Setup Google Map View, if Google Services are available
     private void initMap() {
         if (googleServicesAvailable()) {
             mMapView = (MapView) mView.findViewById(R.id.myMap);
@@ -122,9 +132,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
+
+    /*
+        Setup Google Map in onMapReady method
+        Set Map type, if current one is not the normal map type
+        Display all stored locations, using a Async Task
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
         if (googleMap.getMapType() != GoogleMap.MAP_TYPE_NORMAL) {
@@ -134,7 +149,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         new MarkerAsyncTask().execute();
     }
 
-
+    //Setups toolbar's options menu and inflates the layout
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuInflater menuInflater = new MenuInflater(getContext());
@@ -142,6 +157,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    //Override method for what to do, if item from toolbar's options menu is clicked
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -158,7 +174,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-
+    // OnClickListener for UI Button to trigger insert of a new Location
     private void markNewLocation() {
         Button getGeoLocal = (Button) mView.findViewById(R.id.map_get_geo_local);
         getGeoLocal.setOnClickListener(new View.OnClickListener() {
@@ -170,6 +186,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
+    /* Method to determine Location from inputted text
+       if there can be a location determined, add also a new map marker and insert location into database
+     */
     private void setGeoLocaleFromText(View view) {
         editText = (EditText) getActivity().findViewById(R.id.map_geo_location);
         String location = editText.getText().toString();
@@ -186,8 +205,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     addCoordinatesToDB(lat, lng, userID, userName);
                     goToLocationZoom(lat, lng, DEFAULT_ZOOM);
                 } else {
-                    double BIASED_LAT = -66.666666;
-                    double BIASED_LNG = -145.678901;
+                    displayShortToast(R.string.location_determination_failed);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -202,6 +220,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
+    //Method to insert location into database using the database helper class
     private void addCoordinatesToDB(double latitude, double longitude, String ID, String name) {
         if (!userID.equals("")) {
             boolean insertData = mDatabaseHelper.addCoordinates(latitude, longitude, ID, name, ORIGIN_MAP);
@@ -211,20 +230,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         } else {
             displayShortToast(R.string.entry_success);
         }
-
     }
 
+    //Helper method to create a short length toast message
     private void displayShortToast(int s) {
         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
     }
 
 
+    //Method to add a map marker to Google Map
     private void newMapMarker(double latitude, double longitude) {
         LatLng latlng = new LatLng(latitude, longitude);
         MarkerOptions options = new MarkerOptions().position(latlng);
         mGoogleMap.addMarker(options);
     }
 
+    /* Method to add a map marker to Google Map for a different user, than the currently logged-in one
+        has different color and also a title (with the name of the other user)
+     */
     private void newMapMarkerDiffUser(double latitude, double longitude, String name) {
         LatLng latlng = new LatLng(latitude, longitude);
         MarkerOptions options = new MarkerOptions().title(name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).position(latlng);
@@ -232,6 +255,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
+    // Method to change zoom on Google Map by a given level and coordinates
     private void goToLocationZoom(double lat, double lng, float zoom) {
         LatLng latLng = new LatLng(lat, lng);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
@@ -256,6 +280,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return false;
     }
 
+    /*
+        Method to get current Location from network location provider
+     */
 
     private void getCurrentLocation() {
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -303,7 +330,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 return;
             }
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 6000, 200, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 9000, 200, locationListener);
     }
 
 
@@ -369,6 +396,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
         alertDialog.show();
     }
+
+
+    private void addCurrentLocationFromButtonDialog() {
+        //
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setTitle("Standort markieren");
+        alertDialog.setMessage("Markiere Deinen aktuellen Standort.");
+        alertDialog.setIcon(R.drawable.ic_add_location_travelnote_24dp);
+
+        //if user still clicks yes, then delete db entries
+        alertDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                getCurrentLocation();
+            }
+        });
+
+        //if user cancels, do nothing
+        alertDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing here.
+
+            }
+        });
+        alertDialog.show();
+    }
+
 
     /*
         Method to clear all database entries from current user and call fragment again to update UI
@@ -439,6 +492,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Cursor mapCoordinatesAllUserCursor;
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
         protected Void doInBackground(Void... voids) {
             mapCoordinatesAllUserCursor = mDatabaseHelper.getMapCoordinatesAllUser(userID);
             return null;
@@ -455,6 +513,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         newMapMarkerDiffUser(mapCoordinatesAllUserCursor.getDouble(1), mapCoordinatesAllUserCursor.getDouble(2), mapCoordinatesAllUserCursor.getString(4));
                     }
                 } finally {
+                    //close cursor, when job is done
                     mapCoordinatesAllUserCursor.close();
                 }
             }

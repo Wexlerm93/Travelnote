@@ -155,7 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     }
 
-    public boolean clearDiaryEntryCurrentUser(String userID, int id) {
+    public boolean clearDiaryEntryCurrentUser(String userID, long id) {
         boolean result;
         try {
             SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
