@@ -1,17 +1,20 @@
 package de.ur.mi.travelnote;
 
-import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
-import android.os.AsyncTask;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +26,7 @@ import de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper.DatabaseHelper;
 
 public class GalleryFragment extends Fragment {
 
+
     String userID;
     String userName;
     long deleteID;
@@ -31,7 +35,8 @@ public class GalleryFragment extends Fragment {
     private DatabaseHelper mDatabaseHelper;
     private GalleryCursorAdapter adapter;
     private TextView mTextView;
-    private ListView mListView;
+    private TextView count;
+    private Button delete;
     ArrayList<String> listData;
 
 
@@ -56,15 +61,53 @@ public class GalleryFragment extends Fragment {
 
         initUi(view);
 
-        new DisplayGalleryAsyncTask().execute();
+        ///new DisplayGalleryAsyncTask().execute();
 
         return view;
     }
 
     private void initUi(View view) {
         mTextView = (TextView) view.findViewById(R.id.album_name);
-        mListView = (ListView) view.findViewById(R.id.gallery_list_view);
+        //shows count of how many pics are in the db...just used to check stuff
+        count = (TextView) view.findViewById(R.id.count);
+        count.setText(mDatabaseHelper.getCount());
     }
+
+    /*
+        Method to alert the user before deleting the gallery
+     */
+
+    private void showDeleteAllImagesDialog() {
+        //if there are db entries build alert dialog to avoid deletion by accident
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setTitle("Gallery löschen");
+        alertDialog.setMessage("Willst du wirklich alle Bilder unwiederruflich läschen?");
+        alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
+
+        //if user still clicks yes, then delete images of current user
+        alertDialog.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                boolean stmt = mDatabaseHelper.clearImagesCurrentUser(userID);
+                if (stmt) {
+                    Toast.makeText(getContext(), "Alle Bilder wurden gelöscht!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Bilder konnten nicht gelöscht werden.", Toast.LENGTH_SHORT).show();
+                }
+                refreshFragment();
+            }
+        });
+
+        alertDialog.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //do nothing
+            }
+        });
+        alertDialog.show();
+    }
+
+
 
     public void getUserInfo() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -98,9 +141,40 @@ public class GalleryFragment extends Fragment {
         mDatabaseHelper.close();
     }
 
+    /*
+        Method to setup options menu of toolbar and inflate the toolbar's options menu
+     */
 
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuInflater menuInflater = new MenuInflater(getContext());
+        menuInflater.inflate(R.menu.action_button_gallery_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
-    private class DisplayGalleryAsyncTask extends AsyncTask<Void, Void, Void>{
+    /*
+        Method for selected toolbar's option item, what happens when a certain item is clicked
+     */
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_delete_gallery:
+                //check first if there are any images, show toast if not
+                if (mDatabaseHelper.getCount() == "0") {
+                    Toast.makeText(getContext(), "Keine Bilder vorhanden", Toast.LENGTH_SHORT).show();
+                } else {
+                    showDeleteAllImagesDialog();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+     /*
+          Inner AsyncTask class to fetch diary entries from database and display entries using a custom adapter
+     */
+
+    /**private class DisplayGalleryAsyncTask extends AsyncTask<Void, Void, Void>{
         Cursor data;
 
         protected void onPreExecute(){
@@ -134,5 +208,10 @@ public class GalleryFragment extends Fragment {
             mListView.setAdapter(adapter);
 
         }
-    }
+
+        protected void onCancelled() {
+            super.onCancelled();
+            data.close();
+        }
+    }**/
 }

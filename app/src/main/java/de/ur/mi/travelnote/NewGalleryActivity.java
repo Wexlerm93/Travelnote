@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,18 +46,25 @@ public class NewGalleryActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_gallery_layout);
+        getUserInfo();
         Toolbar toolbar= (Toolbar) findViewById(R.id.basic_toolbar);
         setSupportActionBar(toolbar);
         setupUi();
-
         mDatabaseHelper = new DatabaseHelper(this);
-        getUserInfo();
     }
+
+    /*
+        Method to create option menu
+     */
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.action_buttons_diary_entry_menu, menu);
         return true;
     }
+
+    /*
+        Method to do task for selected menu item
+     */
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -98,8 +106,8 @@ public class NewGalleryActivity extends AppCompatActivity{
         addImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (myUriList.isEmpty()) {
-                    displayShortToast(R.string.failed_saving_entry);
+                if (myUriList == null) {
+                    displayShortToast(R.string.no_pic_chosen);
                 } else {
                     try {
                         addImagesToDb(myUriList);
@@ -112,23 +120,34 @@ public class NewGalleryActivity extends AppCompatActivity{
 
     }
 
+    /*
+        Method runs through the in "onActivityResult" filled myUriList and adds the images to the Database
+     */
+
     private void addImagesToDb(ArrayList<Uri> myUriList) throws IOException {
-        for (int i = 0; i < myUriList.size(); i++) {
-            boolean insert = mDatabaseHelper.addImage(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUriList.get(i)));
-            if(insert){
-                displayShortToast(R.string.entry_successful_toast);
+        if (!myUriList.isEmpty()) {
+            for (int i = 0; i < myUriList.size(); i++) {
+                boolean insert = mDatabaseHelper.addImage(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUriList.get(i)));
 
-            }else{
-                displayShortToast(R.string.failed_saving_entry);
+                if (insert) {
+                    displayShortToast(R.string.entry_successful_toast);
+
+                } else {
+                    displayShortToast(R.string.failed_saving_entry);
+                }
             }
+            myUriList.clear();
+            TextView count = (TextView) findViewById(R.id.image_count);
+            count.setText(mDatabaseHelper.getCount());
+        } else{
+            displayShortToast(R.string.no_pic_chosen);
         }
-
     }
 
-
-    public void makeToast() {
-        Toast.makeText(this, "Kein Bild ausgewählt", Toast.LENGTH_LONG).show();
-    }
+    /*
+        Method opens the users gallery an the can select multiple images. Upon returning the images are saved to myUriList
+        One images is always displayed (this can be deleted later)
+     */
 
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
         try {
@@ -174,8 +193,6 @@ public class NewGalleryActivity extends AppCompatActivity{
                         }
                     }
                 }
-            } else {
-                makeToast();
             }
         } catch (Exception e) {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG).show();
@@ -184,6 +201,9 @@ public class NewGalleryActivity extends AppCompatActivity{
         super.onActivityResult(reqCode, resultCode, data);
     }
 
+    /*
+        Method to show one picture
+     */
     public void Picture(Bitmap picture) {
         ImageView newPicture = (ImageView) findViewById(R.id.test_picture);
         newPicture.setImageBitmap(picture);
@@ -192,4 +212,6 @@ public class NewGalleryActivity extends AppCompatActivity{
     private void displayShortToast(int id) {
         Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
     }
+
+
 }

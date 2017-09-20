@@ -175,6 +175,19 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return sqLiteDatabase.rawQuery(query, null);
     }
 
+    public boolean clearImagesCurrentUser(String userID) {
+        boolean result;
+        try {
+            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+            String clearDBQuery = "DELETE FROM " + TABLE_GALLERY_BITMAPS + " WHERE " + USER_ID + "= '" + userID + "'";
+            sqLiteDatabase.execSQL(clearDBQuery);
+            result = true;
+        } catch (SQLiteAbortException e) {
+            result = false;
+        }
+        return result;
+
+    }
 
     public boolean addImage(Bitmap image) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -184,6 +197,15 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         long result = sqLiteDatabase.insert(TABLE_GALLERY_BITMAPS, null, contentValues);
 
         return (result > -1);
+    }
+
+    public String getCount() {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        String query = "SELECT COUNT(*) FROM " + TABLE_GALLERY_BITMAPS;
+        Cursor c = sqLiteDatabase.rawQuery(query, null);
+        c.moveToFirst();
+        int count = c.getInt(0);
+        return Integer.toString(count);
     }
 
     public Cursor getImagesCurrentUser(String userID) {
