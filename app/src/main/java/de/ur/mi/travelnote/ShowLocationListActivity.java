@@ -120,6 +120,11 @@ public class ShowLocationListActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDatabaseHelper.close();
+    }
 
     private class DisplayLocationEntriesAsyncTask extends AsyncTask<Void,Void,Void> {
 
@@ -151,8 +156,6 @@ public class ShowLocationListActivity extends AppCompatActivity {
 
             listData = new ArrayList<>();
             if (data == null || data.getCount() < 1) {
-
-
                 mTextView.setVisibility(View.VISIBLE);
                 mTextView.setText("Keine Einträge vorhanden!");
             } else {
@@ -170,6 +173,11 @@ public class ShowLocationListActivity extends AppCompatActivity {
 
         }
 
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            data.close();
+        }
     }
 
 

@@ -466,6 +466,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mListener = null;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDatabaseHelper.close();
+    }
+
     //Required Interface
     public interface OnFragmentInteractionListener {
     }
@@ -486,6 +492,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             while (mapCoordinatesCursor.moveToNext()) {
                 newMapMarker(mapCoordinatesCursor.getDouble(1), mapCoordinatesCursor.getDouble(2));
             }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mapCoordinatesCursor.close();
         }
     }
 
@@ -518,6 +530,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     mapCoordinatesAllUserCursor.close();
                 }
             }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mapCoordinatesAllUserCursor.close();
         }
     }
 

@@ -362,6 +362,11 @@ public class DiaryFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDatabaseHelper.close();
+    }
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
@@ -414,6 +419,12 @@ public class DiaryFragment extends Fragment {
             }
             adapter = new DiaryCursorAdapter(getContext(), data);
             mListView.setAdapter(adapter);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            data.close();
         }
     }
 }

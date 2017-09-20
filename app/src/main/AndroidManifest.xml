@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.ur.mi.travelnote">
+
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,6 +12,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permissions.READ_GSERVICES" />
+    <uses-permission android:name="de.ur.mi.travelnote.permission.MAPS_RECEIVE" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -20,20 +22,13 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="23" />
 
-    <uses-permission android:name="de.ur.mi.travelnote.permission.MAPS_RECEIVE" />
-
-
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-
-
 
 
     <application
@@ -46,6 +41,12 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyALRqaTz1rfLwjSA0jjy4CfG_wHCI4j_QI" />
+
+        <uses-library android:name="com.google.android.maps" />
+
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation">
@@ -54,6 +55,39 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".StartActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/title_activity_start" />
+
+        <activity
+            android:name=".NewDiaryEntryActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".NewGalleryActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ShowLocationListActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize"
+            android:label="@string/title_activity_show_location_list"
+            android:parentActivityName=".StartActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.ur.mi.travelnote.StartActivity" />
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -71,82 +105,6 @@
 
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".NewDiaryEntryActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".MenuOverview"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".Map"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".Diary_Menu_Activity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".Diary_Entry_Activity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:windowSoftInputMode="stateHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".New_Gallery_Activity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <uses-library android:name="com.google.android.maps" />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyALRqaTz1rfLwjSA0jjy4CfG_wHCI4j_QI" />
-
-        <activity
-            android:name=".StartActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/title_activity_start" />
-        <activity
-            android:name=".ShowLocationListActivity"
-            android:label="@string/title_activity_show_location_list"
-            android:parentActivityName=".StartActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.ur.mi.travelnote.StartActivity" />
         </activity>
     </application>
 

@@ -92,6 +92,11 @@ public class GalleryFragment extends Fragment {
         fragmentStatus = false;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDatabaseHelper.close();
+    }
 
 
 

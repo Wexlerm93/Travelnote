@@ -239,5 +239,9 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
         editor.clear().apply();
     }
 
-   
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDatabaseHelper.close();
+    }
 }

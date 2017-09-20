@@ -30,14 +30,14 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        TextView textView = (TextView) getActivity().findViewById(R.id.date_edit);
+        //TextView textView = (TextView) getActivity().findViewById(R.id.date_edit);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             GregorianCalendar date = new GregorianCalendar(year, month, day);
             DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN);
             String dateString = df.format(date.getTime());
 
-            textView.setText(dateString);
+            //textView.setText(dateString);
         }
 
     }
