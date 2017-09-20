@@ -98,12 +98,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         markNewLocation();
 
         ImageView imageView = (ImageView) mView.findViewById(R.id.icon_locate_me);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addCurrentLocationFromButtonDialog();
-            }
-        });
+        if(mView != null){
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    addCurrentLocationFromButtonDialog();
+                }
+            });
+        }
+
 
         BottomNavigationView bottomNavView = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
         bottomNavView.getMenu().findItem(R.id.navigation_map).setChecked(true);
