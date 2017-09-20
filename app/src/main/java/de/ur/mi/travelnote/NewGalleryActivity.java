@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -114,22 +113,16 @@ public class NewGalleryActivity extends AppCompatActivity{
     }
 
     private void addImagesToDb(ArrayList<Uri> myUriList) throws IOException {
-        if (!myUriList.isEmpty()) {
-            for (int i = 0; i < myUriList.size(); i++) {
-                boolean insert = mDatabaseHelper.addImage(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUriList.get(i)));
-                myUriList.clear();
-                if (insert) {
-                    displayShortToast(R.string.entry_successful_toast);
-                    TextView count = (TextView) findViewById(R.id.itemcount);
-                    count.setText(mDatabaseHelper.getCount());
+        for (int i = 0; i < myUriList.size(); i++) {
+            boolean insert = mDatabaseHelper.addImage(MediaStore.Images.Media.getBitmap(this.getContentResolver(), myUriList.get(i)));
+            if(insert){
+                displayShortToast(R.string.entry_successful_toast);
 
-                } else {
-                    displayShortToast(R.string.failed_saving_entry);
-                }
+            }else{
+                displayShortToast(R.string.failed_saving_entry);
             }
-        } else {
-            displayShortToast(R.string.no_pic_choosen);
         }
+
     }
 
 
