@@ -43,6 +43,8 @@
     <string name="gallery_headline">Erstelle dein Album oder füge Bilder zu deinem bestehenden Album hinzu.</string>
     <string name="choose_pics_btn">Wähle deine Bilder</string>
     <string name="add_pics_btn">Füge Bilder zu Album hinzu</string>
+    <string name="no_pic_chosen">Kein Bild ausgewählt</string>
+    <string name="delete_gallery">Album löschen</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
