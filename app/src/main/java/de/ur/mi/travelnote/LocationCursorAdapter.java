@@ -40,7 +40,7 @@ public class LocationCursorAdapter extends CursorAdapter {
 
 
         if (getAddress(lat, lng)[0].equals("") || getAddress(lat, lng).equals("")) {
-            countryName.setText("Unbekannte Adresse");
+            countryName.setText(R.string.unkown_address);
             addressName.setText("Koordinaten: " + lat + "," + lng);
         } else {
             localityName.setText(getAddress(lat, lng)[0]);
@@ -48,7 +48,7 @@ public class LocationCursorAdapter extends CursorAdapter {
             if (!getAddress(lat, lng)[2].equals("")) {
                 addressName.setText(getAddress(lat, lng)[2]);
             } else {
-                addressName.setText("Unbekannte Adresse.");
+                addressName.setText(R.string.unkown_address);
             }
         }
 

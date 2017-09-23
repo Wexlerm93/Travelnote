@@ -33,7 +33,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -354,8 +353,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void enableLocationProviderDialog() {
         //build alert dialog, if location provider is disabled
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        alertDialog.setTitle("Standortfreigabe");
-        alertDialog.setMessage("Du musst Deinen Netzwerk-Standort freigeben, damit Travelnote Deinen Standort markieren kann.");
+        alertDialog.setTitle(R.string.standordfreigabe);
+        alertDialog.setMessage(R.string.enable_network_location);
         alertDialog.setIcon(R.drawable.ic_warning_black_24dp);
 
         //if user wants to enable location provider, start intent to device settings..
@@ -404,8 +403,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private void addCurrentLocationFromButtonDialog() {
         //
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-        alertDialog.setTitle("Standort markieren");
-        alertDialog.setMessage("Markiere Deinen aktuellen Standort.");
+        alertDialog.setTitle(R.string.mark_location);
+        alertDialog.setMessage(R.string.mark_location_message);
         alertDialog.setIcon(R.drawable.ic_add_location_travelnote_24dp);
 
         //if user still clicks yes, then delete db entries

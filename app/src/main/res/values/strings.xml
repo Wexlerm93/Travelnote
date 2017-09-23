@@ -16,7 +16,7 @@
     <string name="diary_deleted_toast">Alle Tagebucheinträge wurden gelöscht.</string>
     <string name="marker_deleted_toast">Alle Standorteinträge wurden gelöscht.</string>
     <string name="DB_is_empty">Dieses Tagebuch ist leer.</string>
-    <string name="Mail_Head">Reisetagebuch</string>
+    <string name="Mail_Head">Mein Reisetagebuch</string>
     <string name="menu_title_home">Home</string>
     <string name="menu_title_diary">Tagebuch</string>
     <string name="menu_title_map">Karte</string>
@@ -32,6 +32,9 @@
     <string name="delete_single_location_entry_warning_title">Standort löschen</string>
     <string name="delete_single_location_entry_warning_long">Willst Du diesen Standort wirklich dauerhaft löschen?.</string>
     <string name="share_diary_entry_text">Versende den ausgewählten Tagebucheintrag mit Deiner Lieblingsapp.</string>
+    <string name="better_not">Lieber doch nicht.</string>
+    <string name="go">Und los!</string>
+    <string name="no_entry_chosen">Kein Eintrag...</string>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -40,6 +43,9 @@
     <string name="new_diary_entry_button_text">Neuer Tagebucheintrag</string>
     <string name="menu_title_gallery">Galerie</string>
     <string name="send_per_mail">Tagebucheinträge per Mail senden</string>
+    <string name="unkown_address">Unbekannte Adresse</string>
+    <string name="mark_location">Standort markieren</string>
+    <string name="mark_location_message">Markiere deinen aktuellen Standort.</string>
 
     <string name="gallery_string">Urlaubsalbum</string>
     <string name="gallery_headline">Erstelle dein Album oder füge Bilder zu deinem bestehenden Album hinzu.</string>
@@ -47,6 +53,10 @@
     <string name="add_pics_btn">Füge Bilder zu Album hinzu</string>
     <string name="no_pic_chosen">Kein Bild ausgewählt</string>
     <string name="delete_gallery">Album löschen</string>
+    <string name="cant_access_device">Travelnote darf leider nicht auf Deine Bilder zugreifen.</string>
+    <string name="no_image">Kein Eintrag vorhanden!</string>
+    <string name="all_pics_delete">Alle Bildeinträge wurden gelöscht.</string>
+    <string name="couldnt_be_deleted">Bildeinträge konnten nicht gelöscht werden.</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -57,8 +67,7 @@
     <string name="error_invalid_password">Das Passwort ist zu kurz</string>
     <string name="error_incorrect_password">Falsches Passwort oder Benutzername</string>
     <string name="error_field_required">Dieses Feld wird benötigt</string>
-    <string name="permission_rationale">"Kontakt-Erlaubnis wird für die E-Mail Vervollständigung benötigt."
-    </string>
+    <string name="permission_rationale">"Kontakt-Erlaubnis wird für die E-Mail Vervollständigung benötigt."</string>
     <string name="hello_settings_text">Hallo</string>
     <string name="default_hello_settings_text">Guten Tag!</string>
     <string name="logout_text">Logout</string>
@@ -97,6 +106,10 @@
     <string name="logo_travelnote">Logo Travelnote</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="new_gallery_toolbar_text">Neues Galeriebild</string>
-
+    <string name="standordfreigabe">Standortfreigabe</string>
+    <string name="enable_network_location">Du musst Deinen Netzwerk-Standort freigeben, damit Travelnote Deinen Standort markieren kann.</string>
+    <string name="cant_access_photos">Travelnote scheint nicht auf deine Bilder zugreifen zu dürfen.</string>
+    <string name="your_locations">Deine Standorte</string>
+    <string name="entry_deleted">Eintrag wurde gelöscht</string>
 
 </resources>

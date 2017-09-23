@@ -5,8 +5,6 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,8 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -44,7 +40,7 @@ public class ShowLocationListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.basic_toolbar);
         setSupportActionBar(toolbar);
         if(getSupportActionBar()!= null){
-            getSupportActionBar().setTitle("Deine Standorte");
+            getSupportActionBar().setTitle(R.string.your_locations);
         }
         getUserInfo();
         mDatabaseHelper = new DatabaseHelper(getApplicationContext());
@@ -105,7 +101,7 @@ public class ShowLocationListActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 mDatabaseHelper.clearLocationEntryCurrentUser(userID, helper);
                 new DisplayLocationEntriesAsyncTask().execute();
-                Toast.makeText(ShowLocationListActivity.this, "Eintrag wurde gelöscht", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ShowLocationListActivity.this, R.string.entry_deleted, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -156,7 +152,7 @@ public class ShowLocationListActivity extends AppCompatActivity {
             listData = new ArrayList<>();
             if (data == null || data.getCount() < 1) {
                 mTextView.setVisibility(View.VISIBLE);
-                mTextView.setText("Keine Einträge vorhanden!");
+                mTextView.setText(R.string.no_image);
             } else {
                 try {
                     while (data.moveToNext()){

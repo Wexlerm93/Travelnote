@@ -102,7 +102,7 @@ public class NewImageEntryActivity extends AppCompatActivity {
                 String sTitle = title.getText().toString();
                 String sLocation = location.getText().toString();
                 if(sTitle.equals("") || sLocation.equals("")){
-                    Toast.makeText(NewImageEntryActivity.this, "Bitte fülle alle Felder aus!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewImageEntryActivity.this, R.string.fields_missing_text, Toast.LENGTH_SHORT).show();
                 }else{
                     try {
                         byte[] image = imageViewToByte(imageView);
@@ -135,7 +135,7 @@ public class NewImageEntryActivity extends AppCompatActivity {
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_CODE_GALLERY);
             } else {
-                Toast.makeText(getApplicationContext(), "Travelnote scheint nicht auf Deine Bilder zugfreifen zu dürfen.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.cant_access_photos, Toast.LENGTH_SHORT).show();
             }
             return;
         }

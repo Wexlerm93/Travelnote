@@ -3,13 +3,11 @@ package de.ur.mi.travelnote;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -170,14 +168,14 @@ public class DiaryFragment extends Fragment {
 
 
         //if user still clicks yes, then delete db entries
-        alertDialog.setPositiveButton("Und los!", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(R.string.go, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 sendDiaryEntry(sendID);
             }
         });
 
         //if user cancels, do nothing
-        alertDialog.setNegativeButton("Lieber doch nicht.", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(R.string.better_not, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing here.
             }
@@ -248,7 +246,7 @@ public class DiaryFragment extends Fragment {
             case R.id.action_email:
                 //check first if there are any diary entries, show toast if not
                 if (listData.isEmpty()) {
-                    Toast.makeText(getContext(), "Keine Einträge vorhanden!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.no_db_entry_available, Toast.LENGTH_SHORT).show();
                 } else {
                     mailDiaryEntries();
                 }
@@ -256,7 +254,7 @@ public class DiaryFragment extends Fragment {
             case R.id.action_delete_diary:
                 //chekc first if there are any diary entries, show toast if not
                 if (listData.isEmpty()) {
-                    Toast.makeText(getContext(), "Keine Einträge vorhanden!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.no_db_entry_available, Toast.LENGTH_SHORT).show();
                 } else {
                     showDeleteAllEntriesDialog();
                 }
@@ -282,7 +280,7 @@ public class DiaryFragment extends Fragment {
 
         //check first if the selected diary entry is available..
         if (data == null || data.getCount() < 1) {
-            Toast.makeText(getContext(), "Kein Eintrag..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.no_entry_chosen, Toast.LENGTH_SHORT).show();
         } else {
             //get data from database cursor and store them in local variable
             try {
@@ -304,7 +302,7 @@ public class DiaryFragment extends Fragment {
         //create intent, and hand over content to intent
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Mein Reisetagebucheintrag");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.Mail_Head);
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
         startActivity(Intent.createChooser(sharingIntent, "Ausgewählen Tagebucheintrag verschicken"));
     }

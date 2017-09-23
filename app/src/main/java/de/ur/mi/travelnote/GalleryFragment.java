@@ -44,7 +44,7 @@ public class GalleryFragment extends Fragment {
     GalleryBaseAdapter adapter;
     ImageDBHelper mDatabase;
     ProgressBar progressBar;
-    TextView mTextView;
+    TextView  mTextView;
     Button newImage;
 
     String userID;
@@ -60,6 +60,7 @@ public class GalleryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,7 +124,7 @@ public class GalleryFragment extends Fragment {
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_CODE);
             } else {
-                Toast.makeText(getActivity(), "Travelnote darf leider nicht auf Deine Bilder zugreifen.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.cant_access_device, Toast.LENGTH_SHORT).show();
             }
             return;
         }
@@ -169,7 +170,7 @@ public class GalleryFragment extends Fragment {
             case R.id.action_delete_gallery:
                 //check first if there are any diary entries, show toast if not
                 if (list.isEmpty()) {
-                    Toast.makeText(getContext(), "Keine Einträge vorhanden!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.no_image, Toast.LENGTH_SHORT).show();
                 } else {
                     showDeleteAllEntriesDialog();
                 }
@@ -192,10 +193,10 @@ public class GalleryFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 boolean stmt = mDatabase.clearImagesCurrentUser(userID);
                 if (stmt) {
-                    Toast.makeText(getContext(), "Alle Bildeinträge wurden gelöscht!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.all_pics_delete, Toast.LENGTH_SHORT).show();
                     refreshFragment();
                 } else {
-                    Toast.makeText(getContext(), "Bildeinträge konnten nicht gelöscht werden.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.couldnt_be_deleted, Toast.LENGTH_SHORT).show();
                 }
 
             }
