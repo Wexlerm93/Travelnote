@@ -49,6 +49,7 @@ public class NewImageEntryActivity extends AppCompatActivity {
         initUIFields();
         getUserInfo();
         imageDBHelper = new ImageDBHelper(this);
+        getImageFromFileSystemImage();
         getImageFromFileSystemButton();
         addImage();
     }
