@@ -39,7 +39,7 @@ public class NewDiaryEntryActivity extends AppCompatActivity {
         initDefaultState();
         initNewEntry();
     }
-    
+
     //method to setup toolbar
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.basic_toolbar);

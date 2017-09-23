@@ -37,9 +37,7 @@ import de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper.DatabaseHelper;
 public class DiaryFragment extends Fragment {
 
     private final int ORIGIN = 0;
-    private String userID;
-    private String userName;
-    private long deleteID;
+    private String userID, userName;
     private long sendID;
     private boolean fragmentStatus;
     private OnFragmentInteractionListener mListener;
@@ -95,25 +93,16 @@ public class DiaryFragment extends Fragment {
         mTextView.setVisibility(View.GONE);
         mListView = (ListView) view.findViewById(R.id.diary_list_view);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Button newEntry = (Button) view.findViewById(R.id.new_Entry_Button);
+
+        Button newEntry = (Button) view.findViewById(R.id.new_Entry_Button);
             newEntry.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getContext(), NewDiaryEntryActivity.class);
-                    startActivity(intent);
+                Intent intent = new Intent(getContext(), NewDiaryEntryActivity.class);
+                startActivity(intent);
                 }
             });
-        } else {
-            FloatingActionButton newEntryFloat = (FloatingActionButton) view.findViewById(R.id.new_Entry_Button_Float);
-            newEntryFloat.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getContext(), NewDiaryEntryActivity.class);
-                    startActivity(intent);
-                }
-            });
-        }
+
     }
 
 
@@ -394,7 +383,7 @@ public class DiaryFragment extends Fragment {
 
         /*
             Method to do, when background task is finished
-            fills ArrayList with data from database cursor , if there are any
+            fills ArrayList with data from database cursor , if there are any.
             update UI, when there are no database entries
             finally, set custom adapter to display entries in UI
          */

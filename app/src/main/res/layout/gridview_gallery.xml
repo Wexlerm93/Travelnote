@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/travelnote_grey_light"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/gallery_image"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:minWidth="90dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:paddingLeft="@dimen/small_padding"
+        android:paddingRight="@dimen/small_padding" />
+
+    <TextView
+        android:id="@+id/gallery_image_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/travelnote_blue"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/gallery_image_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/travelnote_turquoise"
+        android:textSize="16sp" />
+
+</LinearLayout>

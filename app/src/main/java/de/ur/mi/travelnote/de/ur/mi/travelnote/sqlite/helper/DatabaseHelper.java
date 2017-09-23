@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 11;
     private static final String DATABASE_NAME = "travelnoteDatabaseBasic";
 
     private static final String TABLE_MAP_COORDINATES = "map_marker";
@@ -48,12 +48,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     //Related to Gallery Table
     private static final String GALLERY_IMAGES = "image";
     private static final String CREATE_TABLE_GALLERY = "CREATE TABLE " + TABLE_GALLERY_BITMAPS
-            + " ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + GALLERY_IMAGES + " STRING)";
+            + " ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + GALLERY_IMAGES + " STRING, " + USER_ID + " STRING, " + USER_NAME + " STRING)";
 
 
 
     public DatabaseHelper(Context context){
-        super(context, DATABASE_NAME,null,DATABASE_VERSION);
+        super(context, DATABASE_NAME, null,DATABASE_VERSION);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_MAP_COORDINATES);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_DIARY_ENTRIES);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + TABLE_GALLERY_BITMAPS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_GALLERY_BITMAPS);
         onCreate(sqLiteDatabase);
     }
 
@@ -174,55 +174,5 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         String query = "SELECT * FROM " + TABLE_DIARY_ENTRIES + " WHERE _id = " + id;
         return sqLiteDatabase.rawQuery(query, null);
     }
-
-    public boolean clearImagesCurrentUser(String userID) {
-        boolean result;
-        try {
-            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-            String clearDBQuery = "DELETE FROM " + TABLE_GALLERY_BITMAPS + " WHERE " + USER_ID + "= '" + userID + "'";
-            sqLiteDatabase.execSQL(clearDBQuery);
-            result = true;
-        } catch (SQLiteAbortException e) {
-            result = false;
-        }
-        return result;
-
-    }
-
-    public boolean addImage(Bitmap image) {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(GALLERY_IMAGES, bitmapToString(image));
-
-        long result = sqLiteDatabase.insert(TABLE_GALLERY_BITMAPS, null, contentValues);
-
-        return (result > -1);
-    }
-
-    public String getCount() {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String query = "SELECT COUNT(*) FROM " + TABLE_GALLERY_BITMAPS;
-        Cursor c = sqLiteDatabase.rawQuery(query, null);
-        c.moveToFirst();
-        int count = c.getInt(0);
-        return Integer.toString(count);
-    }
-
-    public Cursor getImagesCurrentUser(String userID) {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_GALLERY_BITMAPS + " WHERE " + USER_ID + " = '" + userID + "'";
-        return sqLiteDatabase.rawQuery(query, null);
-    }
-
-
-    public final static String bitmapToString(Bitmap in){
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        in.compress(Bitmap.CompressFormat.PNG, 100, bytes);
-        return Base64.encodeToString(bytes.toByteArray(),Base64.DEFAULT);
-    }
-
-
-
-
 
 }

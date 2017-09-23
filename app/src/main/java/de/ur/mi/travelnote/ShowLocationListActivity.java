@@ -30,8 +30,7 @@ import de.ur.mi.travelnote.de.ur.mi.travelnote.sqlite.helper.DatabaseHelper;
 
 public class ShowLocationListActivity extends AppCompatActivity {
 
-    String userName;
-    String userID;
+    String userName, userID;
     TextView mTextView;
     ListView mListView;
     long deleteID;

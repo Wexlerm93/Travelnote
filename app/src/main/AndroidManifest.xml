@@ -2,8 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.ur.mi.travelnote">
 
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="23" />
 
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -18,10 +21,6 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
 
-    <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="23" />
-
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -29,7 +28,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
 
     <application
         android:allowBackup="true"
@@ -58,21 +56,12 @@
         </activity>
         <activity
             android:name=".StartActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/title_activity_start" />
-
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize"
+            android:label="@string/title_activity_start"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".NewDiaryEntryActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".NewGalleryActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -99,12 +88,16 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".NewImageEntryActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
         </activity>
     </application>
 

@@ -2,7 +2,6 @@ package de.ur.mi.travelnote;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -48,11 +47,11 @@ public class OverviewFragment extends Fragment {
             }
         });
 
-        Button toGalleryButton = (Button) view.findViewById(R.id.gallery_image_button);
-        toGalleryButton.setOnClickListener(new View.OnClickListener() {
+        Button toGalleryEntryButton = (Button) view.findViewById(R.id.gallery_image_button);
+        toGalleryEntryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), NewGalleryActivity.class);
+                Intent intent = new Intent(getContext(), NewImageEntryActivity.class);
                 getActivity().startActivity(intent);
             }
 

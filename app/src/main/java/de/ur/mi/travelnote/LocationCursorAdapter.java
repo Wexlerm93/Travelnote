@@ -19,8 +19,7 @@ import java.util.Locale;
 public class LocationCursorAdapter extends CursorAdapter {
 
     Context context;
-    private double lat;
-    private double lng;
+    private double lat, lng;
 
     public LocationCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);

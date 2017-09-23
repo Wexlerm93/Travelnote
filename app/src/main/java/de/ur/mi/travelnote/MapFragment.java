@@ -64,8 +64,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     final int DEFAULT_ZOOM = 3;
     final int ORIGIN_MAP = 1;
     private boolean active;
-    private String userID;
-    private String userName;
+    private String userID, userName;
     private GoogleMap mGoogleMap;
     private MapView mMapView;
     private View mView;

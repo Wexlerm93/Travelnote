@@ -8,6 +8,4 @@
         android:title="@string/delete_gallery"
         android:visible="true"
         app:showAsAction="never"/>
-
-
 </menu>
